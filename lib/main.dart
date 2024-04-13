@@ -4,6 +4,7 @@ import 'package:news_reader/models/news.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
+import 'package:news_reader/screens/setting_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -83,6 +84,7 @@ class MyApp extends StatelessWidget {
                 }
               },
             ),
+        SettingScreen.routeName: (context) => const SettingScreen(),
         ArticleScreen.routeName: (context) => const ArticleScreen(),
       },
     );

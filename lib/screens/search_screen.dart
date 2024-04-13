@@ -58,8 +58,7 @@ class CustomTabBar extends StatelessWidget {
       child: Row(
         children: tabs.map((tab) {
           return Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0), // Adjust the left padding as needed
+            padding: const EdgeInsets.only(left: 8.0),
             child: tab,
           );
         }).toList(),
@@ -92,7 +91,7 @@ class _CategoryNews extends StatelessWidget {
                       tab,
                       style: Theme.of(context)
                           .textTheme
-                          .headlineSmall!
+                          .bodyLarge!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -109,8 +108,10 @@ class _CategoryNews extends StatelessWidget {
                         return InkWell(
                           onTap: () {
                             Navigator.pushNamed(
-                                context, ArticleScreen.routeName,
-                                arguments: articles[index]);
+                              context,
+                              ArticleScreen.routeName,
+                              arguments: articles[index],
+                            );
                           },
                           child: Row(
                             children: [
@@ -201,7 +202,7 @@ class _DiscoverNews extends StatelessWidget {
         children: [
           Text(
             'Discover',
-            style: Theme.of(context).textTheme.headline4!.copyWith(
+            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.w900,
                 ),

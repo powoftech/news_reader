@@ -51,10 +51,12 @@ class _BreakingNews extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Breaking News',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      )),
+              Text(
+                'Breaking News',
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
               Text('More', style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),
@@ -106,14 +108,14 @@ class _BreakingNews extends StatelessWidget {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -130,50 +132,58 @@ class _NewsOfTheDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ImageContainer(
-      height: MediaQuery.of(context).size.height * 0.45,
-      width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
-      imageUrl: articles[0].urlToImage!,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTag(
-            backgroundColor: Colors.grey.withAlpha(150),
-            children: [
-              Text(
-                'News of the Day',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            articles[0].title!,
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                fontWeight: FontWeight.bold, height: 1.25, color: Colors.white),
-          ),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(padding: EdgeInsets.zero),
-            child: Row(
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, ArticleScreen.routeName,
+            arguments: articles[0]);
+      },
+      child: ImageContainer(
+        height: MediaQuery.of(context).size.height * 0.45,
+        width: double.infinity,
+        padding: const EdgeInsets.all(20.0),
+        imageUrl: articles[0].urlToImage!,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTag(
+              backgroundColor: Colors.grey.withAlpha(150),
               children: [
                 Text(
-                  'Learn More',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
-                      ),
+                  'News of the Day',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.white),
                 ),
-                const SizedBox(width: 10),
-                Icon(Icons.arrow_right_alt, color: Colors.white),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            Text(
+              articles[0].title!,
+              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  height: 1.25,
+                  color: Colors.white),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              child: Row(
+                children: [
+                  Text(
+                    'Learn More',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
+                  const SizedBox(width: 10),
+                  Icon(Icons.arrow_right_alt, color: Colors.white),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

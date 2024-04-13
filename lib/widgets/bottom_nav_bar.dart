@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/home_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
+import 'package:news_reader/screens/setting_screen.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
@@ -42,7 +43,9 @@ class BottomNavBar extends StatelessWidget {
           icon: Container(
             margin: const EdgeInsets.only(right: 50),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SettingScreen.routeName);
+              },
               icon: const Icon(Icons.person),
             ),
           ),
