@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/models/news.dart';
 import 'package:news_reader/screens/article_screen.dart';
+import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
+import 'package:news_reader/screens/login_screen.dart';
+import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
 
@@ -86,6 +89,10 @@ class MyApp extends StatelessWidget {
             ),
         SettingScreen.routeName: (context) => const SettingScreen(),
         ArticleScreen.routeName: (context) => const ArticleScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
+        ForgotPasswordScreen.routeName: (context) =>
+            const ForgotPasswordScreen(),
       },
     );
   }

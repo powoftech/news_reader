@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:news_reader/screens/login_screen.dart';
 import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
             ),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             Row(
               children: [
@@ -61,7 +62,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 0
-                            ? Colors.grey
+                            ? Colors.blue.shade300
                             : Colors.grey.withAlpha(70),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -71,7 +72,9 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: Text(
                         'English',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.black,
+                              color: selectedButtonIndex == 0
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -91,7 +94,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 1
-                            ? Colors.grey
+                            ? Colors.blue.shade300
                             : Colors.grey.withAlpha(70),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -101,7 +104,9 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: Text(
                         'Tiếng Việt',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.black,
+                              color: selectedButtonIndex == 0
+                                  ? Colors.black
+                                  : Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -178,7 +183,7 @@ class _LogoutSettingButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          // Handle button tap here
+          Navigator.pushNamed(context, LoginScreen.routeName);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:
