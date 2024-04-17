@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/models/news.dart';
-import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/screens/following_screen.dart';
-import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
-import 'package:news_reader/screens/login_screen.dart';
-import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
-import 'package:news_reader/screens/view_all_screen.dart';
-import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
 void main() => runApp(MyApp());
 

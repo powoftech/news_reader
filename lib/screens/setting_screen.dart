@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/login_screen.dart';
-import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});

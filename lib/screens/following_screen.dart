@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
 class FollowingScreen extends StatelessWidget {
   const FollowingScreen({Key? key});

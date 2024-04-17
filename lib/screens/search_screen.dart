@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
-import 'package:news_reader/widgets/bottom_nav_bar.dart';
 import 'package:news_reader/widgets/image_container.dart';
 
 class SearchScreen extends StatelessWidget {
