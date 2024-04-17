@@ -24,22 +24,14 @@ class SearchScreen extends StatelessWidget {
       initialIndex: 0,
       length: tabs.length,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
-            color: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
+          child: ListView(
+            children: [
+              const _DiscoverNews(),
+              _CategoryNews(tabs: tabs, articles: articles)
+            ],
           ),
-        ),
-        bottomNavigationBar: const BottomNavBar(index: 1),
-        body: ListView(
-          padding: const EdgeInsets.all(20.0),
-          children: [
-            const _DiscoverNews(),
-            _CategoryNews(tabs: tabs, articles: articles)
-          ],
         ),
       ),
     );
@@ -107,10 +99,12 @@ class _CategoryNews extends StatelessWidget {
                       itemBuilder: ((context, index) {
                         return InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
+                            Navigator.push(
                               context,
-                              ArticleScreen.routeName,
-                              arguments: articles[index],
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ArticleScreen(article: articles[index]),
+                              ),
                             );
                           },
                           child: Row(

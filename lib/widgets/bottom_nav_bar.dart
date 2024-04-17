@@ -1,54 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:news_reader/screens/following_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
     super.key,
-    required this.index,
+    required this.currentTab,
   });
-  final int index;
+  final int currentTab;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: index,
+      currentIndex: currentTab,
       showUnselectedLabels: false,
       showSelectedLabels: false,
       selectedItemColor: Colors.black,
       unselectedItemColor: Colors.black.withAlpha(100),
       items: [
         BottomNavigationBarItem(
-          icon: Container(
-            margin: const EdgeInsets.only(left: 50),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, HomeScreen.routeName);
-              },
-              icon: const Icon(Icons.home),
-            ),
-          ),
+          icon: Icon(Icons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, SearchScreen.routeName);
-            },
-            icon: const Icon(Icons.search),
-          ),
+          icon: Icon(Icons.search),
           label: 'Search',
         ),
         BottomNavigationBarItem(
-          icon: Container(
-            margin: const EdgeInsets.only(right: 50),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SettingScreen.routeName);
-              },
-              icon: const Icon(Icons.person),
-            ),
-          ),
+          icon: Icon(Icons.bookmark),
+          label: 'Following',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
           label: 'Setting',
         ),
       ],

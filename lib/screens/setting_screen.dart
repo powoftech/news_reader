@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/login_screen.dart';
 import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  const SettingScreen({super.key});
 
   static const routeName = '/setting';
 
@@ -19,18 +17,6 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context); // Navigate back
-          },
-          icon: const Icon(Icons.arrow_back), // Change the icon to arrow back
-          color: Colors.white,
-        ),
-      ),
-      bottomNavigationBar: const BottomNavBar(index: 2),
       extendBodyBehindAppBar: true,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -183,7 +169,12 @@ class _LogoutSettingButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.pushNamed(context, LoginScreen.routeName);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:

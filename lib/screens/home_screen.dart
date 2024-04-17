@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
+import 'package:news_reader/screens/view_all_screen.dart';
 import 'package:news_reader/widgets/bottom_nav_bar.dart';
 import 'package:news_reader/widgets/custom_tag.dart';
 import 'package:news_reader/widgets/image_container.dart';
@@ -14,16 +15,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
-          color: Colors.white,
-        ),
-      ),
-      bottomNavigationBar: const BottomNavBar(index: 0),
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
@@ -57,12 +48,24 @@ class _BreakingNews extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
               ),
-              Text('More', style: Theme.of(context).textTheme.bodyLarge),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ViewAllArticlesScreen(articles: articles),
+                    ),
+                  );
+                },
+                child:
+                    Text('More', style: Theme.of(context).textTheme.bodyLarge),
+              ),
             ],
           ),
           SizedBox(height: 10),
           SizedBox(
-            height: 340,
+            height: 350,
             child: ListView.separated(
               scrollDirection: Axis.vertical,
               itemCount: 9,
@@ -73,8 +76,13 @@ class _BreakingNews extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, ArticleScreen.routeName,
-                          arguments: articles[index + 1]);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ArticleScreen(article: articles[index + 1]),
+                        ),
+                      );
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

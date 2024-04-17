@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/models/news.dart';
 import 'package:news_reader/screens/article_screen.dart';
+import 'package:news_reader/screens/following_screen.dart';
 import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
 import 'package:news_reader/screens/login_screen.dart';
 import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
+import 'package:news_reader/screens/view_all_screen.dart';
+import 'package:news_reader/widgets/bottom_nav_bar.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
 
-  // Fetch news articles
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MyHomePage(),
+    );
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<Article> articles = [];
+  List<Widget>? pages;
+
   Future<List<Article>> _fetchNews() async {
     News newsService = News();
     await newsService.getNews();
@@ -24,84 +37,70 @@ class MyApp extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'News Reader',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.light,
-          seedColor: Colors.deepPurple,
-        ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: Colors.deepPurple,
-        ),
-      ),
-      themeMode: ThemeMode.system,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => FutureBuilder<List<Article>>(
-              future: _fetchNews(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Scaffold(
-                    body: Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
-                  );
-                } else {
-                  // Pass articles to the home screen
-                  return HomeScreen(articles: snapshot.data!);
-                }
-              },
-            ),
-        SearchScreen.routeName: (context) => FutureBuilder<List<Article>>(
-              future: _fetchNews(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Scaffold(
-                    body: Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
-                  );
-                } else {
-                  // Pass articles to the search screen
-                  return SearchScreen(articles: snapshot.data!);
-                }
-              },
-            ),
-        SettingScreen.routeName: (context) => const SettingScreen(),
-        ArticleScreen.routeName: (context) => const ArticleScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        RegisterScreen.routeName: (context) => const RegisterScreen(),
-        ForgotPasswordScreen.routeName: (context) =>
-            const ForgotPasswordScreen(),
-      },
-    );
+  void initState() {
+    super.initState();
+    _fetchNews().then((value) {
+      setState(() {
+        articles = value;
+        pages = [
+          HomeScreen(
+              articles: articles, key: PageStorageKey<String>('HomeScreen')),
+          SearchScreen(
+              articles: articles, key: PageStorageKey<String>('SearchScreen')),
+          FollowingScreen(key: PageStorageKey<String>('FollowingScreen')),
+          SettingScreen(key: PageStorageKey<String>('SettingScreen')),
+        ];
+      });
+    });
   }
-}
 
-class _MyHomePageState extends State<MyHomePage> {
+  int currentTab = 0;
+  final PageStorageBucket _bucket = PageStorageBucket();
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    if (pages == null) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(), // Or any loading indicator
+        ),
+      );
+    }
+    return Scaffold(
+      body: PageStorage(
+        bucket: _bucket,
+        child: pages![currentTab],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentTab,
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black.withAlpha(100),
+        onTap: (int index) {
+          setState(() {
+            currentTab = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Following',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+      ),
+    );
   }
 }
 
