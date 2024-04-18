@@ -46,7 +46,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                 Icon(Icons.favorite),
                 SizedBox(width: 10),
                 Text(
-                  'Favorite',
+                  'Later Readings',
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -222,8 +222,10 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
               Icon(Icons.favorite),
               SizedBox(width: 10),
               Text(
-                'Favorite',
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(),
+                'Later Readings',
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ],
           ),
@@ -243,11 +245,11 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
           padding: EdgeInsets.only(top: 100, left: 20),
           child: Row(
             children: [
-              Icon(Icons.favorite),
+              Icon(Icons.history),
               SizedBox(width: 10),
               Text(
-                'Favorite',
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                'History',
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
