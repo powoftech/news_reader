@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
+import 'package:news_reader/models/favorite_model.dart';
+import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
 
 class SearchScreen extends StatelessWidget {
   static const routeName = '/discover';
   final List<Article> articles;
-  const SearchScreen({super.key, required this.articles});
+  final HistoryModel history;
+  final Favorite favorite;
+  const SearchScreen(
+      {super.key,
+      required this.articles,
+      required this.history,
+      required this.favorite});
   @override
   Widget build(BuildContext context) {
     List<String> tabs = [
@@ -28,7 +36,11 @@ class SearchScreen extends StatelessWidget {
           child: ListView(
             children: [
               const _DiscoverNews(),
-              _CategoryNews(tabs: tabs, articles: articles)
+              _CategoryNews(
+                  tabs: tabs,
+                  articles: articles,
+                  favorite: favorite,
+                  history: history),
             ],
           ),
         ),
@@ -63,9 +75,13 @@ class _CategoryNews extends StatelessWidget {
     super.key,
     required this.tabs,
     required this.articles,
+    required this.favorite,
+    required this.history,
   });
   final List<String> tabs;
   final List<Article> articles;
+  final Favorite favorite;
+  final HistoryModel history;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -101,8 +117,11 @@ class _CategoryNews extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ArticleScreen(article: articles[index]),
+                                builder: (context) => ArticleScreen(
+                                  article: articles[index],
+                                  favorite: favorite,
+                                  history: history,
+                                ),
                               ),
                             );
                           },

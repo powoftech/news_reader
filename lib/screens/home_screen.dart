@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
+import 'package:news_reader/models/favorite_model.dart';
+import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/screens/view_all_screen.dart';
 import 'package:news_reader/widgets/custom_tag.dart';
@@ -8,8 +10,13 @@ import 'package:news_reader/widgets/image_container.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
   final List<Article> articles;
-
-  const HomeScreen({super.key, required this.articles});
+  final Favorite favorite;
+  final HistoryModel history;
+  const HomeScreen(
+      {super.key,
+      required this.articles,
+      required this.favorite,
+      required this.history});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,8 +24,10 @@ class HomeScreen extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
-          _NewsOfTheDay(articles: articles),
-          _BreakingNews(articles: articles),
+          _NewsOfTheDay(
+              articles: articles, history: history, favorite: favorite),
+          _BreakingNews(
+              articles: articles, history: history, favorite: favorite),
         ],
       ),
     );
@@ -27,10 +36,13 @@ class HomeScreen extends StatelessWidget {
 
 class _BreakingNews extends StatelessWidget {
   const _BreakingNews({
-    super.key,
     required this.articles,
+    required this.history,
+    required this.favorite,
   });
   final List<Article> articles;
+  final HistoryModel history;
+  final Favorite favorite;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -51,8 +63,11 @@ class _BreakingNews extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ViewAllArticlesScreen(articles: articles),
+                      builder: (context) => ViewAllArticlesScreen(
+                        articles: articles,
+                        favorite: favorite,
+                        history: history,
+                      ),
                     ),
                   );
                 },
@@ -77,10 +92,14 @@ class _BreakingNews extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ArticleScreen(article: articles[index + 1]),
+                          builder: (context) => ArticleScreen(
+                            article: articles[index + 1],
+                            favorite: favorite,
+                            history: history,
+                          ),
                         ),
                       );
+                      history.articles?.add(articles[index + 1]);
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,18 +149,21 @@ class _BreakingNews extends StatelessWidget {
 
 class _NewsOfTheDay extends StatelessWidget {
   const _NewsOfTheDay({
-    super.key,
     required this.articles,
+    required this.history,
+    required this.favorite,
   });
 
   final List<Article> articles;
-
+  final HistoryModel history;
+  final Favorite favorite;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, ArticleScreen.routeName,
             arguments: articles[0]);
+        history.articles?.add(articles[0]);
       },
       child: ImageContainer(
         height: MediaQuery.of(context).size.height * 0.45,

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
+import 'package:news_reader/models/favorite_model.dart';
+import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
 
 class ViewAllArticlesScreen extends StatelessWidget {
-  const ViewAllArticlesScreen({Key? key, required this.articles});
+  const ViewAllArticlesScreen(
+      {super.key,
+      required this.articles,
+      required this.favorite,
+      required this.history});
   static const routeName = '/view';
   final List<Article> articles;
+  final HistoryModel history;
+  final Favorite favorite;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +41,11 @@ class ViewAllArticlesScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ArticleScreen(article: articles[index]),
+                        builder: (context) => ArticleScreen(
+                          article: articles[index],
+                          favorite: favorite,
+                          history: history,
+                        ),
                       ),
                     );
                   },

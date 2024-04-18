@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:news_reader/models/article_model.dart';
+import 'package:news_reader/models/favorite_model.dart';
+import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/models/news.dart';
 import 'package:news_reader/screens/following_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
@@ -22,6 +25,8 @@ class MyApp extends StatelessWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Article> articles = [];
+  Favorite favorite = Favorite(id: '1', articles: []);
+  HistoryModel history = HistoryModel(id: '1', articles: []);
   List<Widget>? pages;
 
   Future<List<Article>> _fetchNews() async {
@@ -38,10 +43,19 @@ class _MyHomePageState extends State<MyHomePage> {
         articles = value;
         pages = [
           HomeScreen(
-              articles: articles, key: PageStorageKey<String>('HomeScreen')),
+              articles: articles,
+              favorite: favorite,
+              history: history,
+              key: PageStorageKey<String>('HomeScreen')),
           SearchScreen(
-              articles: articles, key: PageStorageKey<String>('SearchScreen')),
-          FollowingScreen(key: PageStorageKey<String>('FollowingScreen')),
+              articles: articles,
+              favorite: favorite,
+              history: history,
+              key: PageStorageKey<String>('SearchScreen')),
+          FollowingScreen(
+              favorite: favorite,
+              history: history,
+              key: PageStorageKey<String>('FollowingScreen')),
           SettingScreen(key: PageStorageKey<String>('SettingScreen')),
         ];
       });
