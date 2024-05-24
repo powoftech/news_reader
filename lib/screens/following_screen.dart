@@ -153,7 +153,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ArticleScreen(
-                              article: favorite.articles![index],
+                              article: history.articles![index],
                               history: history,
                               favorite: favorite),
                         ),
@@ -233,12 +233,8 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
         SizedBox(
           height: 250,
           child: Center(
-            child: Text(
-              'Empty',
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: Colors.black,
-                  ),
-            ),
+            child: Text('Empty',
+                style: Theme.of(context).textTheme.headlineSmall!),
           ),
         ),
         Padding(
@@ -259,12 +255,8 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
         SizedBox(
           height: 250,
           child: Center(
-            child: Text(
-              'Empty',
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: Colors.black,
-                  ),
-            ),
+            child: Text('Empty',
+                style: Theme.of(context).textTheme.headlineSmall!),
           ),
         ),
       ],

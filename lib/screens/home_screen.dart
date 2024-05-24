@@ -6,6 +6,7 @@ import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/screens/view_all_screen.dart';
 import 'package:news_reader/widgets/custom_tag.dart';
 import 'package:news_reader/widgets/image_container.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeProvider().getThemeData(context).backgroundColor,
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
@@ -161,8 +163,16 @@ class _NewsOfTheDay extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, ArticleScreen.routeName,
-            arguments: articles[0]);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArticleScreen(
+              article: articles[0],
+              favorite: favorite,
+              history: history,
+            ),
+          ),
+        );
         history.articles?.add(articles[0]);
       },
       child: ImageContainer(

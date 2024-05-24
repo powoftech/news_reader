@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_reader/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static const routeName = '/forgot-password';
@@ -11,7 +12,6 @@ class ForgotPasswordScreen extends StatelessWidget {
         title: const Text(
           'Forgot Password?',
           style: TextStyle(
-            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -32,7 +32,6 @@ class ForgotPasswordScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Email',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),

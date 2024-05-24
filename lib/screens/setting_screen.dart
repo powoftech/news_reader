@@ -26,7 +26,6 @@ class _SettingScreenState extends State<SettingScreen> {
             Text(
               'Select Language',
               style: Theme.of(context).textTheme.headline4!.copyWith(
-                    color: Colors.black,
                     fontWeight: FontWeight.w900,
                   ),
             ),
@@ -48,7 +47,11 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 0
                             ? Colors.blue.shade300
-                            : Colors.grey.withAlpha(70),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Colors.grey.withAlpha(
+                                    70) // Unselected button color in light mode
+                                : Colors
+                                    .white, // Unselected button color in dark mode
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -80,7 +83,10 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 1
                             ? Colors.blue.shade300
-                            : Colors.grey.withAlpha(70),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Colors.grey.withAlpha(
+                                    70) // Unselected button color in light mode
+                                : Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -103,11 +109,13 @@ class _SettingScreenState extends State<SettingScreen> {
             SizedBox(height: 10),
             _LogoutSettingButton(),
             SizedBox(height: 20),
-            Text('Phiên bản ứng dụng :1.0.57',
-                style: TextStyle(color: Colors.grey)),
+            Text(
+              'Phiên bản ứng dụng :1.0.57',
+            ),
             SizedBox(height: 10),
-            Text('Bạn đã mở app này 2 lần',
-                style: TextStyle(color: Colors.grey)),
+            Text(
+              'Bạn đã mở app này 2 lần',
+            ),
             SizedBox(height: 20),
             GestureDetector(
               onTap: () {
@@ -115,6 +123,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      surfaceTintColor: Colors.white,
                       title: Text('Confirmation'),
                       content:
                           Text('Are you sure you want to delete your account?'),
@@ -125,7 +134,13 @@ class _SettingScreenState extends State<SettingScreen> {
                           },
                           child: Text(
                             'Cancel',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors
+                                      .black // Unselected button color in light mode
+                                  : Colors.white,
+                            ),
                           ),
                         ),
                         TextButton(
@@ -135,7 +150,13 @@ class _SettingScreenState extends State<SettingScreen> {
                           },
                           child: Text(
                             'Delete',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors
+                                      .black // Unselected button color in light mode
+                                  : Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -176,8 +197,9 @@ class _LogoutSettingButton extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor:
-              Colors.transparent, // Set the button background color
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.black
+              : Colors.white, // Set the button background color
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -186,12 +208,19 @@ class _LogoutSettingButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: Colors.black), // Add the icon
+            Icon(
+              Icons.logout,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.white
+                  : Colors.black,
+            ), // Add the icon
             SizedBox(width: 8), // Add some spacing between icon and text
             Text(
               'Logout', // Add the text
               style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: Colors.black,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
             ),

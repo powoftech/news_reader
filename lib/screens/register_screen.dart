@@ -13,7 +13,6 @@ class RegisterScreen extends StatelessWidget {
         title: const Text(
           'Register',
           style: TextStyle(
-            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -27,7 +26,6 @@ class RegisterScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Email',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -39,7 +37,6 @@ class RegisterScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Password',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 suffixIcon: const Icon(
                   Icons.visibility,
@@ -57,7 +54,6 @@ class RegisterScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'First Name',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -71,7 +67,6 @@ class RegisterScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Last Name',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),

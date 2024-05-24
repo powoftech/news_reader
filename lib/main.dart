@@ -6,9 +6,13 @@ import 'package:news_reader/models/favorite_model.dart';
 import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/models/news.dart';
 import 'package:news_reader/screens/following_screen.dart';
+import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/home_screen.dart';
+import 'package:news_reader/screens/login_screen.dart';
+import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,7 +21,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeProvider().getThemeData(context),
       home: MyHomePage(),
     );
   }
@@ -57,6 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
               history: history,
               key: PageStorageKey<String>('FollowingScreen')),
           SettingScreen(key: PageStorageKey<String>('SettingScreen')),
+          LoginScreen(key: PageStorageKey<String>('LoginScreen')),
+          RegisterScreen(key: PageStorageKey<String>('RegisterScreen')),
+          ForgotPasswordScreen(
+              key: PageStorageKey<String>('ForgotPasswordScreen')),
         ];
       });
     });
@@ -73,6 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     }
+    ThemeData themeData = ThemeProvider().getThemeData(context);
+    bool isDarkMode = themeData.brightness == Brightness.dark;
     return Scaffold(
       body: PageStorage(
         bucket: _bucket,
@@ -82,8 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: currentTab,
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black.withAlpha(100),
+        selectedItemColor: isDarkMode ? Colors.white : Colors.black,
+        unselectedItemColor: isDarkMode
+            ? Colors.white.withAlpha(100)
+            : Colors.black.withAlpha(100),
         onTap: (int index) {
           setState(() {
             currentTab = index;

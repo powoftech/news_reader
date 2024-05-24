@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/register_screen.dart';
+import 'package:news_reader/screens/setting_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login';
@@ -9,10 +10,15 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+        ),
         title: const Text(
           'Login',
           style: TextStyle(
-            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -26,7 +32,6 @@ class LoginScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Email',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -38,7 +43,6 @@ class LoginScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Password',
-                fillColor: Colors.grey.shade200,
                 filled: true,
                 suffixIcon: const Icon(
                   Icons.visibility,

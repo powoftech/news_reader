@@ -4,6 +4,7 @@ import 'package:news_reader/models/favorite_model.dart';
 import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
 
 class SearchScreen extends StatelessWidget {
   static const routeName = '/discover';
@@ -31,6 +32,7 @@ class SearchScreen extends StatelessWidget {
       initialIndex: 0,
       length: tabs.length,
       child: Scaffold(
+        backgroundColor: ThemeProvider().getThemeData(context).backgroundColor,
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
           child: ListView(
@@ -215,7 +217,6 @@ class _DiscoverNews extends StatelessWidget {
           Text(
             'Discover',
             style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  color: Colors.black,
                   fontWeight: FontWeight.w900,
                 ),
           ),
@@ -230,7 +231,6 @@ class _DiscoverNews extends StatelessWidget {
           TextFormField(
             decoration: InputDecoration(
               hintText: 'Search for news',
-              fillColor: Colors.grey.shade200,
               filled: true,
               prefixIcon: const Icon(
                 Icons.search,
