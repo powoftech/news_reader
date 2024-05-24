@@ -201,21 +201,17 @@ class _NewsOfTheDay extends StatelessWidget {
                     style: Provider.of<ThemeProvider>(context)
                         .getThemeData(context)
                         .textTheme
-                        .bodyMedium!),
+                        .bodyMedium!
+                        .copyWith(color: Colors.white)),
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              articles[0].title!,
-              style: Provider.of<ThemeProvider>(context)
-                  .getThemeData(context)
-                  .textTheme
-                  .displayLarge!
-                  .copyWith(
-                      fontWeight: FontWeight.bold,
-                      height: 1.25,
-                      color: Colors.white),
-            ),
+            Text(articles[0].title!,
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(color: Colors.white)),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -225,7 +221,8 @@ class _NewsOfTheDay extends StatelessWidget {
                       style: Provider.of<ThemeProvider>(context)
                           .getThemeData(context)
                           .textTheme
-                          .titleLarge!),
+                          .titleLarge!
+                          .copyWith(color: Colors.white)),
                   const SizedBox(width: 10),
                   Icon(Icons.arrow_right_alt, color: Colors.white),
                 ],
