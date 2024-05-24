@@ -7,6 +7,7 @@ import 'package:news_reader/screens/view_all_screen.dart';
 import 'package:news_reader/widgets/custom_tag.dart';
 import 'package:news_reader/widgets/image_container.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/';
@@ -21,7 +22,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeProvider().getThemeData(context).backgroundColor,
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
@@ -54,12 +58,11 @@ class _BreakingNews extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Breaking News',
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
+              Text('Breaking News',
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .titleLarge),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -73,8 +76,11 @@ class _BreakingNews extends StatelessWidget {
                     ),
                   );
                 },
-                child:
-                    Text('More', style: Theme.of(context).textTheme.bodyLarge),
+                child: Text('More',
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .titleLarge),
               ),
             ],
           ),
@@ -112,25 +118,29 @@ class _BreakingNews extends StatelessWidget {
                           imageUrl: articles[index + 1].urlToImage!,
                         ),
                         const SizedBox(height: 10),
-                        Text(
-                          articles[index + 1].title!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
+                        Text(articles[index + 1].title!,
+                            style: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .textTheme
+                                .bodyLarge!),
                         const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               '${DateTime.now().difference(DateTime.parse(articles[index + 1].publishedAt!)).inHours} hours ago',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Provider.of<ThemeProvider>(context)
+                                  .getThemeData(context)
+                                  .textTheme
+                                  .bodyMedium,
                             ),
                             Flexible(
                               child: Text(
                                 ' by ${articles[index + 1].author}',
-                                style: Theme.of(context).textTheme.bodySmall,
+                                style: Provider.of<ThemeProvider>(context)
+                                    .getThemeData(context)
+                                    .textTheme
+                                    .bodyMedium,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -187,34 +197,35 @@ class _NewsOfTheDay extends StatelessWidget {
             CustomTag(
               backgroundColor: Colors.grey.withAlpha(150),
               children: [
-                Text(
-                  'News of the Day',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: Colors.white),
-                ),
+                Text('News of the Day',
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .bodyMedium!),
               ],
             ),
             const SizedBox(height: 10),
             Text(
               articles[0].title!,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  height: 1.25,
-                  color: Colors.white),
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .displayLarge!
+                  .copyWith(
+                      fontWeight: FontWeight.bold,
+                      height: 1.25,
+                      color: Colors.white),
             ),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               child: Row(
                 children: [
-                  Text(
-                    'Learn More',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
+                  Text('Learn More',
+                      style: Provider.of<ThemeProvider>(context)
+                          .getThemeData(context)
+                          .textTheme
+                          .titleLarge!),
                   const SizedBox(width: 10),
                   Icon(Icons.arrow_right_alt, color: Colors.white),
                 ],

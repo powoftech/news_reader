@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news_reader/screens/forgot_pasword_screen.dart';
 import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login';
@@ -9,6 +11,10 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -16,12 +22,11 @@ class LoginScreen extends StatelessWidget {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
-        title: const Text(
-          'Login',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Login',
+            style: Provider.of<ThemeProvider>(context)
+                .getThemeData(context)
+                .textTheme
+                .displayMedium),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -67,7 +72,11 @@ class LoginScreen extends StatelessWidget {
               ),
               child: Text(
                 'Login',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -95,7 +104,11 @@ class LoginScreen extends StatelessWidget {
               ),
               child: Text(
                 'Register new account',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -121,7 +134,11 @@ class LoginScreen extends StatelessWidget {
               ),
               child: Text(
                 'Forgot Password',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),

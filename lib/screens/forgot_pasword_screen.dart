@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/login_screen.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static const routeName = '/forgot-password';
@@ -8,13 +10,16 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       appBar: AppBar(
-        title: const Text(
-          'Forgot Password?',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Forgot Password?',
+            style: Provider.of<ThemeProvider>(context)
+                .getThemeData(context)
+                .textTheme
+                .displayMedium),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -32,6 +37,12 @@ class ForgotPasswordScreen extends StatelessWidget {
             TextFormField(
               decoration: InputDecoration(
                 hintText: 'Email',
+                fillColor: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .brightness ==
+                        Brightness.light
+                    ? Colors.grey.shade200
+                    : Colors.grey.shade800,
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),

@@ -4,6 +4,8 @@ import 'package:news_reader/models/favorite_model.dart';
 import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class ViewAllArticlesScreen extends StatelessWidget {
   const ViewAllArticlesScreen(
@@ -18,13 +20,17 @@ class ViewAllArticlesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'View All',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayMedium,
         ),
       ),
       body: Column(
@@ -58,15 +64,13 @@ class ViewAllArticlesScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                articles[index].title!,
-                                maxLines: 4,
-                                overflow: TextOverflow.clip,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
+                              Text(articles[index].title!,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.clip,
+                                  style: Provider.of<ThemeProvider>(context)
+                                      .getThemeData(context)
+                                      .textTheme
+                                      .bodyLarge!),
                               const SizedBox(
                                 height: 10,
                               ),

@@ -13,8 +13,18 @@ import 'package:news_reader/screens/register_screen.dart';
 import 'package:news_reader/screens/search_screen.dart';
 import 'package:news_reader/screens/setting_screen.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      // Wrap MyApp with ChangeNotifierProvider
+      create: (context) =>
+          ThemeProvider(), // Provide an instance of ThemeProvider
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
@@ -22,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeProvider().getThemeData(context),
+      theme: Provider.of<ThemeProvider>(context).getThemeData(context),
       home: MyHomePage(),
     );
   }

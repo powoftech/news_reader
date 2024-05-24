@@ -5,6 +5,7 @@ import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
   static const routeName = '/discover';
@@ -32,7 +33,10 @@ class SearchScreen extends StatelessWidget {
       initialIndex: 0,
       length: tabs.length,
       child: Scaffold(
-        backgroundColor: ThemeProvider().getThemeData(context).backgroundColor,
+        backgroundColor: Provider.of<ThemeProvider>(context)
+            .getThemeData(context)
+            .colorScheme
+            .background,
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
           child: ListView(
@@ -143,16 +147,14 @@ class _CategoryNews extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      articles[index].title!,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.clip,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(
-                                              fontWeight: FontWeight.bold),
-                                    ),
+                                    Text(articles[index].title!,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.clip,
+                                        style:
+                                            Provider.of<ThemeProvider>(context)
+                                                .getThemeData(context)
+                                                .textTheme
+                                                .bodyLarge!),
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -167,9 +169,11 @@ class _CategoryNews extends StatelessWidget {
                                         ),
                                         Text(
                                             '${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago',
-                                            style: Theme.of(context)
+                                            style: Provider.of<ThemeProvider>(
+                                                    context)
+                                                .getThemeData(context)
                                                 .textTheme
-                                                .bodySmall),
+                                                .bodyMedium),
                                         const SizedBox(
                                           width: 40,
                                         ),
@@ -181,9 +185,11 @@ class _CategoryNews extends StatelessWidget {
                                           width: 5,
                                         ),
                                         Text('1224 views',
-                                            style: Theme.of(context)
+                                            style: Provider.of<ThemeProvider>(
+                                                    context)
+                                                .getThemeData(context)
                                                 .textTheme
-                                                .bodySmall),
+                                                .bodyMedium),
                                       ],
                                     ),
                                   ],
@@ -214,18 +220,20 @@ class _DiscoverNews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Discover',
-            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-          ),
+          Text('Discover',
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .headlineLarge),
           const SizedBox(
             height: 5,
           ),
           Text(
             'News from all over the world',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Provider.of<ThemeProvider>(context)
+                .getThemeData(context)
+                .textTheme
+                .bodyMedium,
           ),
           const SizedBox(height: 20),
           TextFormField(

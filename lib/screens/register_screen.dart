@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_reader/screens/login_screen.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
   static const routeName = '/register';
@@ -9,13 +11,16 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       appBar: AppBar(
-        title: const Text(
-          'Register',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Register',
+            style: Provider.of<ThemeProvider>(context)
+                .getThemeData(context)
+                .textTheme
+                .displayMedium),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -109,7 +114,11 @@ class RegisterScreen extends StatelessWidget {
               ),
               child: Text(
                 'Complete Register',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -137,7 +146,11 @@ class RegisterScreen extends StatelessWidget {
               ),
               child: Text(
                 'Already have an ccount? Login',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),

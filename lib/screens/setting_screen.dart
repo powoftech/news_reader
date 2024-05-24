@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reader/screens/login_screen.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -16,6 +18,10 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       extendBodyBehindAppBar: true,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -25,9 +31,10 @@ class _SettingScreenState extends State<SettingScreen> {
           children: [
             Text(
               'Select Language',
-              style: Theme.of(context).textTheme.headline4!.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .displayMedium,
             ),
             SizedBox(
               height: 30,
@@ -47,7 +54,10 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 0
                             ? Colors.blue.shade300
-                            : Theme.of(context).brightness == Brightness.light
+                            : Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .brightness ==
+                                    Brightness.light
                                 ? Colors.grey.withAlpha(
                                     70) // Unselected button color in light mode
                                 : Colors
@@ -59,11 +69,14 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       child: Text(
                         'English',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        style: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(
                               color: selectedButtonIndex == 0
                                   ? Colors.white
                                   : Colors.black,
-                              fontWeight: FontWeight.bold,
                             ),
                       ),
                     ),
@@ -83,7 +96,10 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedButtonIndex == 1
                             ? Colors.blue.shade300
-                            : Theme.of(context).brightness == Brightness.light
+                            : Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .brightness ==
+                                    Brightness.light
                                 ? Colors.grey.withAlpha(
                                     70) // Unselected button color in light mode
                                 : Colors.white,
@@ -94,11 +110,14 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       child: Text(
                         'Tiếng Việt',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        style: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(
                               color: selectedButtonIndex == 0
                                   ? Colors.black
                                   : Colors.white,
-                              fontWeight: FontWeight.bold,
                             ),
                       ),
                     ),
@@ -135,7 +154,9 @@ class _SettingScreenState extends State<SettingScreen> {
                           child: Text(
                             'Cancel',
                             style: TextStyle(
-                              color: Theme.of(context).brightness ==
+                              color: Provider.of<ThemeProvider>(context)
+                                          .getThemeData(context)
+                                          .brightness ==
                                       Brightness.light
                                   ? Colors
                                       .black // Unselected button color in light mode
@@ -151,7 +172,9 @@ class _SettingScreenState extends State<SettingScreen> {
                           child: Text(
                             'Delete',
                             style: TextStyle(
-                              color: Theme.of(context).brightness ==
+                              color: Provider.of<ThemeProvider>(context)
+                                          .getThemeData(context)
+                                          .brightness ==
                                       Brightness.light
                                   ? Colors
                                       .black // Unselected button color in light mode
@@ -197,9 +220,12 @@ class _LogoutSettingButton extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).brightness == Brightness.light
+          backgroundColor: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .brightness ==
+                  Brightness.light
               ? Colors.black
-              : Colors.white, // Set the button background color
+              : Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -210,15 +236,25 @@ class _LogoutSettingButton extends StatelessWidget {
           children: [
             Icon(
               Icons.logout,
-              color: Theme.of(context).brightness == Brightness.light
+              color: Provider.of<ThemeProvider>(context)
+                          .getThemeData(context)
+                          .brightness ==
+                      Brightness.light
                   ? Colors.white
                   : Colors.black,
             ), // Add the icon
             SizedBox(width: 8), // Add some spacing between icon and text
             Text(
               'Logout', // Add the text
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: Theme.of(context).brightness == Brightness.light
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .displayLarge!
+                  .copyWith(
+                    color: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .brightness ==
+                            Brightness.light
                         ? Colors.white
                         : Colors.black,
                     fontWeight: FontWeight.bold,

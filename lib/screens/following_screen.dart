@@ -4,6 +4,8 @@ import 'package:news_reader/models/favorite_model.dart';
 import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
 import 'package:news_reader/widgets/image_container.dart';
+import 'package:news_reader/widgets/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class FollowingScreen extends StatelessWidget {
   const FollowingScreen(
@@ -36,6 +38,10 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .background,
       extendBodyBehindAppBar: true,
       body: Column(
         children: [
@@ -45,12 +51,11 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.favorite),
                 SizedBox(width: 10),
-                Text(
-                  'Later Readings',
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
+                Text('Later Readings',
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .displayLarge),
               ],
             ),
           ),
@@ -125,12 +130,11 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.history),
                 SizedBox(width: 10),
-                Text(
-                  'History',
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
+                Text('History',
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .displayLarge),
               ],
             ),
           ),
@@ -221,12 +225,11 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
             children: [
               Icon(Icons.favorite),
               SizedBox(width: 10),
-              Text(
-                'Later Readings',
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
+              Text('Later Readings',
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .displayLarge),
             ],
           ),
         ),
@@ -234,7 +237,10 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
           height: 250,
           child: Center(
             child: Text('Empty',
-                style: Theme.of(context).textTheme.headlineSmall!),
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .headlineSmall!),
           ),
         ),
         Padding(
@@ -243,12 +249,11 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
             children: [
               Icon(Icons.history),
               SizedBox(width: 10),
-              Text(
-                'History',
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
+              Text('History',
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .displayLarge),
             ],
           ),
         ),
@@ -256,7 +261,10 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
           height: 250,
           child: Center(
             child: Text('Empty',
-                style: Theme.of(context).textTheme.headlineSmall!),
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .headlineSmall!),
           ),
         ),
       ],
