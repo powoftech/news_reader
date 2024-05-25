@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/models/favorite_model.dart';

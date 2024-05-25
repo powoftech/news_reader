@@ -4,16 +4,14 @@ abstract class DataProvider {}
 
 // Theme Data Provider (Concrete Class)
 class ThemeProvider extends ChangeNotifier implements DataProvider {
-  ThemeMode _themeMode = ThemeMode.light;
-
+  ThemeMode _themeMode = ThemeMode.system;
   ThemeData getThemeData(BuildContext context) {
-    switch (_themeMode) {
-      case ThemeMode.light:
-        return _lightTheme;
-      case ThemeMode.dark:
-        return _darkTheme;
-      default:
-        return _lightTheme;
+    if (_themeMode == ThemeMode.system) {
+      return MediaQuery.of(context).platformBrightness == Brightness.light
+          ? _lightTheme
+          : _darkTheme;
+    } else {
+      return _themeMode == ThemeMode.light ? _lightTheme : _darkTheme;
     }
   }
 
