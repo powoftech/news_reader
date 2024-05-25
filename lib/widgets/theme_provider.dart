@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 
-enum ThemeMode { light, dark }
+abstract class DataProvider {}
 
-class ThemeProvider with ChangeNotifier {
+// Theme Data Provider (Concrete Class)
+class ThemeProvider extends ChangeNotifier implements DataProvider {
+  ThemeMode _themeMode = ThemeMode.system;
   ThemeData getThemeData(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    return brightness == Brightness.dark ? _darkTheme : _lightTheme;
+    if (_themeMode == ThemeMode.system) {
+      return MediaQuery.of(context).platformBrightness == Brightness.light
+          ? _lightTheme
+          : _darkTheme;
+    } else {
+      return _themeMode == ThemeMode.light ? _lightTheme : _darkTheme;
+    }
+  }
+
+  void setThemeMode(ThemeMode mode) {
+    _themeMode = mode;
+    notifyListeners(); // Notify listeners about the change
   }
 
   static final ThemeData _lightTheme = ThemeData(

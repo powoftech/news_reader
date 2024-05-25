@@ -59,12 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   User? user;
 
-  @override
-  void initState() {
-    super.initState();
-    user = auth.currentUser;
-  }
-  
   List<Article> articles = [];
   Favorite favorite = Favorite(id: '1', articles: []);
   HistoryModel history = HistoryModel(id: '1', articles: []);

@@ -21,11 +21,10 @@ class HomeScreen extends StatelessWidget {
       required this.history});
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData =
+        Provider.of<ThemeProvider>(context).getThemeData(context);
     return Scaffold(
-      backgroundColor: Provider.of<ThemeProvider>(context)
-          .getThemeData(context)
-          .colorScheme
-          .surface,
+      backgroundColor: themeData.colorScheme.background,
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
