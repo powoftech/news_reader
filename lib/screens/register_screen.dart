@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:news_reader/screens/login_screen.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,7 @@ class RegisterScreen extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       appBar: AppBar(
         title: Text('Register',
             style: Provider.of<ThemeProvider>(context)

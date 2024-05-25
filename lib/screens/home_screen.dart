@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
@@ -93,7 +93,7 @@ class _BreakingNews extends StatelessWidget {
               separatorBuilder: (context, index) => SizedBox(height: 40),
               padding: EdgeInsets.symmetric(vertical: 8),
               itemBuilder: (context, index) {
-                return Container(
+                return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: InkWell(
                     onTap: () {

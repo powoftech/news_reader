@@ -11,7 +11,7 @@ class ThemeProvider with ChangeNotifier {
   static final ThemeData _lightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
-      background: Colors.white,
+      surface: Colors.white,
     ),
     textTheme: TextTheme(
       displayLarge: TextStyle(
@@ -70,7 +70,7 @@ class ThemeProvider with ChangeNotifier {
   static final ThemeData _darkTheme = ThemeData(
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
-      background: Colors.black,
+      surface: Colors.black,
     ),
     textTheme: TextTheme(
       displayLarge: TextStyle(

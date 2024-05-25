@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_reader/screens/login_screen.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +12,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       appBar: AppBar(
         title: Text('Forgot Password?',
             style: Provider.of<ThemeProvider>(context)

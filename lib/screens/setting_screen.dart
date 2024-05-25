@@ -13,7 +13,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  int selectedButtonIndex = 1; // Default index of the selected button
+  int selectedButtonIndex = 0; // Default index of the selected button
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _SettingScreenState extends State<SettingScreen> {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       extendBodyBehindAppBar: true,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -37,12 +37,12 @@ class _SettingScreenState extends State<SettingScreen> {
                   .displayMedium,
             ),
             SizedBox(
-              height: 30,
+              height: 8,
             ),
             Row(
               children: [
                 Expanded(
-                  child: Container(
+                  child: SizedBox(
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
@@ -82,9 +82,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 2),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Container(
+                  child: SizedBox(
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
@@ -109,7 +109,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       child: Text(
-                        'Tiếng Việt',
+                        'Vietnamese',
                         style: Provider.of<ThemeProvider>(context)
                             .getThemeData(context)
                             .textTheme
@@ -129,13 +129,13 @@ class _SettingScreenState extends State<SettingScreen> {
             _LogoutSettingButton(),
             SizedBox(height: 20),
             Text(
-              'Phiên bản ứng dụng :1.0.57',
+              'App version: 1.0.00',
             ),
             SizedBox(height: 10),
-            Text(
-              'Bạn đã mở app này 2 lần',
-            ),
-            SizedBox(height: 20),
+            // Text(
+            //   'Bạn đã mở app này 2 lần',
+            // ),
+            // SizedBox(height: 20),
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -188,7 +188,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 );
               },
               child: Text(
-                'Xóa tài khoản của tôi',
+                'Delete my account',
                 style: TextStyle(
                   color: Colors.red,
                 ),
@@ -202,13 +202,11 @@ class _SettingScreenState extends State<SettingScreen> {
 }
 
 class _LogoutSettingButton extends StatelessWidget {
-  const _LogoutSettingButton({
-    super.key,
-  });
+  const _LogoutSettingButton();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: ElevatedButton(
         onPressed: () {

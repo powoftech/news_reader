@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:news_reader/screens/forgot_pasword_screen.dart';
+import 'package:news_reader/screens/forgot_password_screen.dart';
 import 'package:news_reader/screens/register_screen.dart';
-import 'package:news_reader/screens/setting_screen.dart';
 import 'package:news_reader/widgets/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),

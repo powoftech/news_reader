@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_reader/models/article_model.dart';
 import 'package:news_reader/models/favorite_model.dart';
 import 'package:news_reader/models/history_model.dart';
 import 'package:news_reader/screens/article_screen.dart';
@@ -27,7 +26,6 @@ class FollowingScreen extends StatelessWidget {
 
 class _NotEmptyHistoryandFavorite extends StatelessWidget {
   const _NotEmptyHistoryandFavorite({
-    super.key,
     required this.favorite,
     required this.history,
   });
@@ -41,7 +39,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       extendBodyBehindAppBar: true,
       body: Column(
         children: [
@@ -210,9 +208,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
 }
 
 class _EmptyHistoryandFavorite extends StatelessWidget {
-  const _EmptyHistoryandFavorite({
-    super.key,
-  });
+  const _EmptyHistoryandFavorite();
 
   @override
   Widget build(BuildContext context) {

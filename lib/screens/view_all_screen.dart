@@ -23,7 +23,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
       backgroundColor: Provider.of<ThemeProvider>(context)
           .getThemeData(context)
           .colorScheme
-          .background,
+          .surface,
       appBar: AppBar(
         title: Text(
           'View All',

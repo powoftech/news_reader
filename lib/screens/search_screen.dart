@@ -36,7 +36,7 @@ class SearchScreen extends StatelessWidget {
         backgroundColor: Provider.of<ThemeProvider>(context)
             .getThemeData(context)
             .colorScheme
-            .background,
+            .surface,
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
           child: ListView(
@@ -78,7 +78,6 @@ class CustomTabBar extends StatelessWidget {
 
 class _CategoryNews extends StatelessWidget {
   const _CategoryNews({
-    super.key,
     required this.tabs,
     required this.articles,
     required this.favorite,
@@ -209,9 +208,7 @@ class _CategoryNews extends StatelessWidget {
 }
 
 class _DiscoverNews extends StatelessWidget {
-  const _DiscoverNews({
-    super.key,
-  });
+  const _DiscoverNews();
 
   @override
   Widget build(BuildContext context) {
