@@ -18,7 +18,6 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  String? errorMessage = "";
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -30,14 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
         password: _controllerPassword.text,
       );
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
+      print(e.message);
     }
-  }
-
-  Widget _errorMessage() {
-    return Text(errorMessage == "" ? "" : "Error: $errorMessage");
   }
 
   @override
@@ -60,11 +53,13 @@ class _SignInScreenState extends State<SignInScreen> {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
-        title: Text("Sign in",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge),
+        title: Text(
+          "Sign in",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -147,12 +142,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     Icon(
                       Icons.login,
-                      color: Provider.of<ThemeProvider>(context)
-                                  .getThemeData(context)
-                                  .brightness ==
-                              Brightness.light
-                          ? Colors.black
-                          : Colors.white,
+                      color: Colors.white,
                     ), // Add the icon
                     SizedBox(width: 8),
                     Text(

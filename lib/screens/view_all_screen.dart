@@ -16,7 +16,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
       required this.history});
   static const routeName = "/view";
   final List<Article> articles;
-  final HistoryModel history;
+  final History history;
   final Favorite favorite;
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
           style: Provider.of<ThemeProvider>(context)
               .getThemeData(context)
               .textTheme
-              .displayMedium,
+              .displayLarge,
         ),
       ),
       body: Column(

@@ -18,7 +18,6 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  String? errorMessage = "";
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -30,14 +29,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _controllerPassword.text,
       );
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
+      print(e.message);
     }
-  }
-
-  Widget _errorMessage() {
-    return Text(errorMessage == "" ? "" : "Error: $errorMessage");
   }
 
   @override
