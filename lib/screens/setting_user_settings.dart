@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:http/http.dart";
 import "package:news_reader/screens/change_password_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";

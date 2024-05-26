@@ -142,12 +142,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     Icon(
                       Icons.login,
-                      color: Provider.of<ThemeProvider>(context)
-                                  .getThemeData(context)
-                                  .brightness ==
-                              Brightness.light
-                          ? Colors.black
-                          : Colors.white,
+                      color: Colors.white,
                     ), // Add the icon
                     SizedBox(width: 8),
                     Text(

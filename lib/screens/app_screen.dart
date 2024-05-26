@@ -7,7 +7,6 @@ import "package:news_reader/screens/change_password_screen.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
-import "package:news_reader/screens/setting_screen_guest.dart";
 import "package:news_reader/screens/setting_screen_user.dart";
 import "package:news_reader/screens/setting_user_settings.dart";
 import "package:news_reader/screens/waiting_screen.dart";
@@ -31,27 +30,6 @@ class _AppScreenState extends State<AppScreen> {
     await newsService.getNews();
     return newsService.news;
   }
-
-  // final User? user = Auth().currentUser;
-
-  // Future<void> signOut() async {
-  //   await Auth().signOut();
-  // }
-
-  // Widget _title() {
-  //   return const Text("Firebase Auth");
-  // }
-
-  // Widget _userUid() {
-  //   return Text(user?.email ?? "User email");
-  // }
-
-  // Widget _signOutButton() {
-  //   return ElevatedButton(
-  //     onPressed: signOut,
-  //     child: Text("Logout"),
-  //   );
-  // }
 
   @override
   void initState() {
@@ -80,9 +58,6 @@ class _AppScreenState extends State<AppScreen> {
           ),
           SettingScreenUser(
             key: PageStorageKey<String>("SettingScreen"),
-          ),
-          SettingScreenGuest(
-            key: PageStorageKey<String>("SettingScreenGuest"),
           ),
           SettingScreenUserSettings(
             key: PageStorageKey<String>("SettingScreenUserSettings"),

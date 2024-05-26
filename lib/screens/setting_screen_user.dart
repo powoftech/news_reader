@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
+import "package:news_reader/auth.dart";
 import "package:news_reader/screens/profile_screen.dart";
-import "package:news_reader/screens/setting_screen_guest.dart";
 import "package:news_reader/screens/setting_user_settings.dart";
 import "package:news_reader/screens/sign_in_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
@@ -17,6 +17,43 @@ class SettingScreenUser extends StatefulWidget {
 
 class _SettingScreenUserState extends State<SettingScreenUser> {
   int selectedButtonIndex = 0; // Default index of the selected button
+
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
+
+  SizedBox signOutButton(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: ElevatedButton(
+        onPressed: signOut,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.logout,
+              color: Colors.white,
+            ), // Add the icon
+            SizedBox(width: 8), // Add some spacing between icon and text
+            Text(
+              "Sign out", // Add the text
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .bodyLarge!,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,49 +82,7 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
             // SizedBox(height: 20),
             Info(context),
             SizedBox(height: 40),
-            logoutButton(context)
-          ],
-        ),
-      ),
-    );
-  }
-
-  SizedBox logoutButton(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SettingScreenGuest(),
-            ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.logout,
-              color: Provider.of<ThemeProvider>(context)
-                          .getThemeData(context)
-                          .brightness ==
-                      Brightness.light
-                  ? Colors.black
-                  : Colors.white,
-            ), // Add the icon
-            SizedBox(width: 8), // Add some spacing between icon and text
-            Text("Logout", // Add the text
-                style: Provider.of<ThemeProvider>(context)
-                    .getThemeData(context)
-                    .textTheme
-                    .bodyLarge!),
+            signOutButton(context)
           ],
         ),
       ),
