@@ -18,7 +18,6 @@ import "package:news_reader/screens/search_screen.dart";
 import "package:news_reader/screens/setting_screen_guest.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
-
 import "firebase_options.dart";
 
 void main() async {

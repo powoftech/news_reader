@@ -3,6 +3,7 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/widgets/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
@@ -43,7 +44,14 @@ class ViewAllArticlesScreen extends StatelessWidget {
               itemCount: articles.length - 1,
               itemBuilder: ((context, index) {
                 return InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    articles[index + 1].view =
+                        (int.parse(articles[index + 1].view!) + 1).toString();
+                    await updateFieldInFirebase(
+                        "article",
+                        articles[index + 1].id!,
+                        "view",
+                        int.parse(articles[index + 1].view!));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -83,8 +91,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  Text(
-                                      "${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago",
+                                  Text("${articles[index].publishedAt}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),
@@ -98,7 +105,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  Text("1224 views",
+                                  Text("${articles[index].view}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),

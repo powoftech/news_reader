@@ -3,6 +3,7 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/widgets/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
@@ -118,7 +119,15 @@ class _CategoryNews extends StatelessWidget {
                       itemCount: 9,
                       itemBuilder: ((context, index) {
                         return InkWell(
-                          onTap: () {
+                          onTap: () async {
+                            articles[index + 1].view =
+                                (int.parse(articles[index + 1].view!) + 1)
+                                    .toString();
+                            await updateFieldInFirebase(
+                                "article",
+                                articles[index + 1].id!,
+                                "view",
+                                int.parse(articles[index + 1].view!));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -166,16 +175,20 @@ class _CategoryNews extends StatelessWidget {
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text(
-                                            "${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago",
+                                        Expanded(
+                                          child: Text(
+                                            "${articles[index].publishedAt}",
                                             style: Provider.of<ThemeProvider>(
                                                     context)
                                                 .getThemeData(context)
                                                 .textTheme
-                                                .bodyMedium),
-                                        const SizedBox(
-                                          width: 40,
+                                                .bodyMedium,
+                                            maxLines: 1, // Ensure single line
+                                            overflow: TextOverflow
+                                                .ellipsis, // Handle potential overflow
+                                          ),
                                         ),
+                                        const Spacer(),
                                         const Icon(
                                           Icons.visibility,
                                           size: 18,
@@ -183,12 +196,15 @@ class _CategoryNews extends StatelessWidget {
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text("1224 views",
-                                            style: Provider.of<ThemeProvider>(
-                                                    context)
-                                                .getThemeData(context)
-                                                .textTheme
-                                                .bodyMedium),
+                                        Text(
+                                          "${articles[index].view} views",
+                                          style: Provider.of<ThemeProvider>(
+                                                  context)
+                                              .getThemeData(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ],
                                     ),
                                   ],
