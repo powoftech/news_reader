@@ -30,7 +30,7 @@ class News {
   Future<void> getNews() async {
     final collectionRef = firestore.collection("article");
     final querySnapshot = await collectionRef.get();
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       // Convert each document to a Map
       Map<String, dynamic> data = doc.data();
       DateTime? dateTime = parseFirestoreDateTime(data["datePublished"]);
@@ -48,6 +48,6 @@ class News {
       );
       // Add article to the list
       news.add(article);
-    });
+    }
   }
 }

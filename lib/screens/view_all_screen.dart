@@ -91,13 +91,19 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  Text("${articles[index].publishedAt}",
-                                      style: Theme.of(context)
+                                  Expanded(
+                                    child: Text(
+                                      "${articles[index].publishedAt}",
+                                      style: Provider.of<ThemeProvider>(context)
+                                          .getThemeData(context)
                                           .textTheme
-                                          .bodySmall),
-                                  const SizedBox(
-                                    width: 40,
+                                          .bodyMedium,
+                                      maxLines: 1, // Ensure single line
+                                      overflow: TextOverflow
+                                          .ellipsis, // Handle potential overflow
+                                    ),
                                   ),
+                                  const Spacer(),
                                   const Icon(
                                     Icons.visibility,
                                     size: 18,
@@ -105,10 +111,14 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  Text("${articles[index].view}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall),
+                                  Text(
+                                    "${articles[index].view} views",
+                                    style: Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .textTheme
+                                        .bodyMedium,
+                                    textAlign: TextAlign.end,
+                                  ),
                                 ],
                               ),
                             ],

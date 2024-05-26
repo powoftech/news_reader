@@ -47,7 +47,10 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
-                  .bodyLarge!,
+                  .bodyLarge!
+                  .copyWith(
+                    color: Colors.white,
+                  ),
             ),
           ],
         ),
