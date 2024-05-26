@@ -1,8 +1,4 @@
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/auth.dart";
-import "package:news_reader/screens/forgot_password_screen.dart";
-import "package:news_reader/screens/sign_up_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
@@ -19,16 +15,11 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreen extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  String? errorMessage = "";
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerRepeatPassword =
       TextEditingController();
-
-  Widget _errorMessage() {
-    return Text(errorMessage == "" ? "" : "Error: $errorMessage");
-  }
 
   @override
   Widget build(BuildContext context) {

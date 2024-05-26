@@ -1,8 +1,6 @@
-import "package:html/parser.dart";
-import "package:news_reader/models/article_model.dart";
-import "package:http/http.dart" as http;
 import "package:cloud_firestore/cloud_firestore.dart";
-import 'package:intl/intl.dart';
+import "package:intl/intl.dart";
+import "package:news_reader/models/article_model.dart";
 import "package:news_reader/widgets/date_formatter.dart";
 
 DateTime? parseFirestoreDateTime(String dateString) {
@@ -13,7 +11,7 @@ DateTime? parseFirestoreDateTime(String dateString) {
   } on FormatException {
     // If parsing fails, try with format excluding day of week and month name
     try {
-      final format2 = DateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'");
+      final format2 = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
       return format2.parse(dateString);
     } on FormatException catch (e) {
       // Handle all other parsing exceptions
@@ -30,7 +28,7 @@ class News {
   Future<void> getNews() async {
     final collectionRef = firestore.collection("article");
     final querySnapshot = await collectionRef.get();
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       // Convert each document to a Map
       Map<String, dynamic> data = doc.data();
       DateTime? dateTime = parseFirestoreDateTime(data["datePublished"]);
@@ -48,6 +46,6 @@ class News {
       );
       // Add article to the list
       news.add(article);
-    });
+    }
   }
 }
