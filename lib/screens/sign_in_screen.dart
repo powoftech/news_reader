@@ -83,6 +83,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(
                   hintText: "Email or username",
                   filled: true,
+                  fillColor: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .colorScheme
+                              .brightness ==
+                          Brightness.light
+                      ? Colors.grey.shade200
+                      : Colors.grey.shade800,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                     borderSide: BorderSide.none,
@@ -95,6 +102,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(
                   hintText: "Password",
                   filled: true,
+                  fillColor: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .colorScheme
+                              .brightness ==
+                          Brightness.light
+                      ? Colors.grey.shade200
+                      : Colors.grey.shade800,
                   suffixIcon: GestureDetector(
                     onTap: () {
                       setState(() {
