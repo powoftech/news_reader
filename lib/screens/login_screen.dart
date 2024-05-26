@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/screens/forgot_password_screen.dart';
-import 'package:news_reader/screens/register_screen.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/screens/forgot_password_screen.dart";
+import "package:news_reader/screens/register_screen.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
-class LoginScreen extends StatelessWidget {
-  static const routeName = '/login';
+class LoginScreen extends StatefulWidget {
+  static const routeName = "/login";
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String? errorMessage = "";
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +29,7 @@ class LoginScreen extends StatelessWidget {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
-        title: Text('Login',
+        title: Text("Login",
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
@@ -35,7 +43,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Email',
+                hintText: "Email",
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -46,7 +54,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 10),
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Password',
+                hintText: "Password",
                 filled: true,
                 suffixIcon: const Icon(
                   Icons.visibility,
@@ -70,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Login',
+                "Login",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme
@@ -102,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Register new account',
+                "Register new account",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme
@@ -132,7 +140,7 @@ class LoginScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Forgot Password',
+                "Forgot Password",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme

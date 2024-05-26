@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class ForgotPasswordScreen extends StatelessWidget {
-  static const routeName = '/forgot-password';
+  static const routeName = "/forgot-password";
   const ForgotPasswordScreen({super.key});
 
   @override
@@ -14,7 +14,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text('Forgot Password?',
+        title: Text("Forgot Password?",
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
@@ -29,13 +29,13 @@ class ForgotPasswordScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
               child: Text(
-                'Fill in your registered email. If the email is valid, you will receive reset password instruction via email',
+                "Fill in your registered email. If the email is valid, you will receive reset password instruction via email",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Email',
+                hintText: "Email",
                 fillColor: Provider.of<ThemeProvider>(context)
                             .getThemeData(context)
                             .brightness ==
@@ -61,7 +61,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Reset Password',
+                "Reset Password",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

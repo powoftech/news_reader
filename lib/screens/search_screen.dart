@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/models/article_model.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:news_reader/screens/article_screen.dart';
-import 'package:news_reader/widgets/image_container.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/models/article_model.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/widgets/image_container.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class SearchScreen extends StatelessWidget {
-  static const routeName = '/discover';
+  static const routeName = "/discover";
   final List<Article> articles;
   final HistoryModel history;
   final Favorite favorite;
@@ -20,14 +20,14 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = [
-      'All',
-      'World',
-      'Politics',
-      'Business',
-      'Tech',
-      'Science',
-      'Sports',
-      'Health',
+      "All",
+      "World",
+      "Politics",
+      "Business",
+      "Tech",
+      "Science",
+      "Sports",
+      "Health",
     ];
     return DefaultTabController(
       initialIndex: 0,
@@ -167,7 +167,7 @@ class _CategoryNews extends StatelessWidget {
                                           width: 5,
                                         ),
                                         Text(
-                                            '${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago',
+                                            "${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago",
                                             style: Provider.of<ThemeProvider>(
                                                     context)
                                                 .getThemeData(context)
@@ -183,7 +183,7 @@ class _CategoryNews extends StatelessWidget {
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text('1224 views',
+                                        Text("1224 views",
                                             style: Provider.of<ThemeProvider>(
                                                     context)
                                                 .getThemeData(context)
@@ -217,7 +217,7 @@ class _DiscoverNews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Discover',
+          Text("Discover",
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
@@ -226,7 +226,7 @@ class _DiscoverNews extends StatelessWidget {
             height: 5,
           ),
           Text(
-            'News from all over the world',
+            "News from all over the world",
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
@@ -235,7 +235,7 @@ class _DiscoverNews extends StatelessWidget {
           const SizedBox(height: 20),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Search for news',
+              hintText: "Search for news",
               filled: true,
               prefixIcon: const Icon(
                 Icons.search,

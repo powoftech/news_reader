@@ -1,12 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/screens/login_screen.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/screens/login_screen.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
-class RegisterScreen extends StatelessWidget {
-  static const routeName = '/register';
+class RegisterScreen extends StatefulWidget {
+  static const routeName = "/register";
   const RegisterScreen({super.key});
 
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +20,7 @@ class RegisterScreen extends StatelessWidget {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text('Register',
+        title: Text("Register",
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
@@ -29,7 +34,7 @@ class RegisterScreen extends StatelessWidget {
           children: [
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Email',
+                hintText: "Email",
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -40,7 +45,7 @@ class RegisterScreen extends StatelessWidget {
             SizedBox(height: 10),
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Password',
+                hintText: "Password",
                 filled: true,
                 suffixIcon: const Icon(
                   Icons.visibility,
@@ -57,7 +62,7 @@ class RegisterScreen extends StatelessWidget {
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'First Name',
+                hintText: "First Name",
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -70,7 +75,7 @@ class RegisterScreen extends StatelessWidget {
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: 'Last Name',
+                hintText: "Last Name",
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -90,7 +95,7 @@ class RegisterScreen extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      'By registering, you agree and acknowledge that you understand the privacy policy for this application',
+                      "By registering, you agree and acknowledge that you understand the privacy policy for this application",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -112,7 +117,7 @@ class RegisterScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Complete Register',
+                "Complete Register",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme
@@ -144,7 +149,7 @@ class RegisterScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                'Already have an ccount? Login',
+                "Already have an account? Login",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme

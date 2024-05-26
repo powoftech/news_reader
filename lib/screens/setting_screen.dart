@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/screens/login_screen.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/screens/login_screen.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
-  static const routeName = '/setting';
+  static const routeName = "/setting";
 
   @override
   _SettingScreenState createState() => _SettingScreenState();
@@ -30,7 +30,7 @@ class _SettingScreenState extends State<SettingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Select Language',
+              "Select Language",
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
@@ -68,7 +68,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       child: Text(
-                        'English',
+                        "English",
                         style: Provider.of<ThemeProvider>(context)
                             .getThemeData(context)
                             .textTheme
@@ -109,7 +109,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       child: Text(
-                        'Vietnamese',
+                        "Vietnamese",
                         style: Provider.of<ThemeProvider>(context)
                             .getThemeData(context)
                             .textTheme
@@ -129,7 +129,7 @@ class _SettingScreenState extends State<SettingScreen> {
             _LogoutSettingButton(),
             SizedBox(height: 20),
             Text(
-              'App version: 1.0.00',
+              "App version: 1.0.00",
             ),
             SizedBox(height: 10),
             // Text(
@@ -143,16 +143,16 @@ class _SettingScreenState extends State<SettingScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       surfaceTintColor: Colors.white,
-                      title: Text('Confirmation'),
+                      title: Text("Confirmation"),
                       content:
-                          Text('Are you sure you want to delete your account?'),
+                          Text("Are you sure you want to delete your account?"),
                       actions: [
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(); // Close the dialog
                           },
                           child: Text(
-                            'Cancel',
+                            "Cancel",
                             style: TextStyle(
                               color: Provider.of<ThemeProvider>(context)
                                           .getThemeData(context)
@@ -170,7 +170,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Navigator.of(context).pop(); // Close the dialog
                           },
                           child: Text(
-                            'Delete',
+                            "Delete",
                             style: TextStyle(
                               color: Provider.of<ThemeProvider>(context)
                                           .getThemeData(context)
@@ -188,7 +188,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 );
               },
               child: Text(
-                'Delete my account',
+                "Delete my account",
                 style: TextStyle(
                   color: Colors.red,
                 ),
@@ -243,7 +243,7 @@ class _LogoutSettingButton extends StatelessWidget {
             ), // Add the icon
             SizedBox(width: 8), // Add some spacing between icon and text
             Text(
-              'Logout', // Add the text
+              "Logout", // Add the text
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme

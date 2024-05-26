@@ -1,4 +1,4 @@
-import 'package:news_reader/models/article_model.dart';
+import "package:news_reader/models/article_model.dart";
 
 class HistoryModel {
   String? id;

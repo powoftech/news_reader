@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/models/article_model.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:news_reader/screens/article_screen.dart';
-import 'package:news_reader/screens/view_all_screen.dart';
-import 'package:news_reader/widgets/custom_tag.dart';
-import 'package:news_reader/widgets/image_container.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/models/article_model.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/screens/view_all_screen.dart";
+import "package:news_reader/widgets/custom_tag.dart";
+import "package:news_reader/widgets/image_container.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class HomeScreen extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = "/";
   final List<Article> articles;
   final Favorite favorite;
   final HistoryModel history;
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
     final ThemeData themeData =
         Provider.of<ThemeProvider>(context).getThemeData(context);
     return Scaffold(
-      backgroundColor: themeData.colorScheme.background,
+      backgroundColor: themeData.colorScheme.surface,
       extendBodyBehindAppBar: true,
       body: ListView(
         padding: EdgeInsets.zero,
@@ -57,7 +57,7 @@ class _BreakingNews extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Breaking News',
+              Text("Breaking News",
                   style: Provider.of<ThemeProvider>(context)
                       .getThemeData(context)
                       .textTheme
@@ -75,7 +75,7 @@ class _BreakingNews extends StatelessWidget {
                     ),
                   );
                 },
-                child: Text('More',
+                child: Text("More",
                     style: Provider.of<ThemeProvider>(context)
                         .getThemeData(context)
                         .textTheme
@@ -127,7 +127,7 @@ class _BreakingNews extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${DateTime.now().difference(DateTime.parse(articles[index + 1].publishedAt!)).inHours} hours ago',
+                              "${DateTime.now().difference(DateTime.parse(articles[index + 1].publishedAt!)).inHours} hours ago",
                               style: Provider.of<ThemeProvider>(context)
                                   .getThemeData(context)
                                   .textTheme
@@ -135,7 +135,7 @@ class _BreakingNews extends StatelessWidget {
                             ),
                             Flexible(
                               child: Text(
-                                ' by ${articles[index + 1].author}',
+                                " by ${articles[index + 1].author}",
                                 style: Provider.of<ThemeProvider>(context)
                                     .getThemeData(context)
                                     .textTheme
@@ -196,7 +196,7 @@ class _NewsOfTheDay extends StatelessWidget {
             CustomTag(
               backgroundColor: Colors.grey.withAlpha(150),
               children: [
-                Text('News of the Day',
+                Text("News of the Day",
                     style: Provider.of<ThemeProvider>(context)
                         .getThemeData(context)
                         .textTheme
@@ -216,7 +216,7 @@ class _NewsOfTheDay extends StatelessWidget {
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               child: Row(
                 children: [
-                  Text('Learn More',
+                  Text("Learn More",
                       style: Provider.of<ThemeProvider>(context)
                           .getThemeData(context)
                           .textTheme

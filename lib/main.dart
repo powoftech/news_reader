@@ -1,22 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:news_reader/auth.dart';
-import 'package:news_reader/models/article_model.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:news_reader/models/news.dart';
-import 'package:news_reader/screens/following_screen.dart';
-import 'package:news_reader/screens/forgot_password_screen.dart';
-import 'package:news_reader/screens/home_screen.dart';
-import 'package:news_reader/screens/login_screen.dart';
-import 'package:news_reader/screens/register_screen.dart';
-import 'package:news_reader/screens/search_screen.dart';
-import 'package:news_reader/screens/setting_screen.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:firebase_core/firebase_core.dart";
+import "package:flutter/material.dart";
+import "package:news_reader/auth.dart";
+import "package:news_reader/models/article_model.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:news_reader/models/news.dart";
+import "package:news_reader/screens/following_screen.dart";
+import "package:news_reader/screens/forgot_password_screen.dart";
+import "package:news_reader/screens/home_screen.dart";
+import "package:news_reader/screens/login_screen.dart";
+import "package:news_reader/screens/register_screen.dart";
+import "package:news_reader/screens/search_screen.dart";
+import "package:news_reader/screens/setting_screen.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
-import 'firebase_options.dart';
+import "firebase_options.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,19 +55,36 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Auth auth = Auth();
-
-  User? user;
-
   List<Article> articles = [];
-  Favorite favorite = Favorite(id: '1', articles: []);
-  HistoryModel history = HistoryModel(id: '1', articles: []);
+  Favorite favorite = Favorite(id: "1", articles: []);
+  HistoryModel history = HistoryModel(id: "1", articles: []);
   List<Widget>? pages;
 
   Future<List<Article>> _fetchNews() async {
     News newsService = News();
     await newsService.getNews();
     return newsService.news;
+  }
+
+  final User? user = Auth().currentUser;
+
+  Future<void> logout() async {
+    await Auth().logout();
+  }
+
+  Widget _title() {
+    return const Text("Firebase Auth");
+  }
+
+  Widget _userUid() {
+    return Text(user?.email ?? "User email");
+  }
+
+  Widget _logoutButton() {
+    return ElevatedButton(
+      onPressed: logout,
+      child: Text("Logout"),
+    );
   }
 
   @override
@@ -81,21 +98,21 @@ class _MyHomePageState extends State<MyHomePage> {
               articles: articles,
               favorite: favorite,
               history: history,
-              key: PageStorageKey<String>('HomeScreen')),
+              key: PageStorageKey<String>("HomeScreen")),
           SearchScreen(
               articles: articles,
               favorite: favorite,
               history: history,
-              key: PageStorageKey<String>('SearchScreen')),
+              key: PageStorageKey<String>("SearchScreen")),
           FollowingScreen(
               favorite: favorite,
               history: history,
-              key: PageStorageKey<String>('FollowingScreen')),
-          SettingScreen(key: PageStorageKey<String>('SettingScreen')),
-          LoginScreen(key: PageStorageKey<String>('LoginScreen')),
-          RegisterScreen(key: PageStorageKey<String>('RegisterScreen')),
+              key: PageStorageKey<String>("FollowingScreen")),
+          SettingScreen(key: PageStorageKey<String>("SettingScreen")),
+          LoginScreen(key: PageStorageKey<String>("LoginScreen")),
+          RegisterScreen(key: PageStorageKey<String>("RegisterScreen")),
           ForgotPasswordScreen(
-              key: PageStorageKey<String>('ForgotPasswordScreen')),
+              key: PageStorageKey<String>("ForgotPasswordScreen")),
         ];
       });
     });
@@ -103,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int currentTab = 0;
   final PageStorageBucket _bucket = PageStorageBucket();
+  
   @override
   Widget build(BuildContext context) {
     if (pages == null) {
@@ -112,8 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     }
+    
     ThemeData themeData = ThemeProvider().getThemeData(context);
     bool isDarkMode = themeData.brightness == Brightness.dark;
+    
     return Scaffold(
       body: PageStorage(
         bucket: _bucket,
@@ -135,19 +155,19 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Search',
+            label: "Search",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
-            label: 'Following',
+            label: "Following",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Setting',
+            label: "Setting",
           ),
         ],
       ),

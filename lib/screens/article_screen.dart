@@ -1,9 +1,9 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:news_reader/models/article_model.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import "dart:async";
+import "package:flutter/material.dart";
+import "package:news_reader/models/article_model.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:webview_flutter/webview_flutter.dart";
 
 class ArticleScreen extends StatelessWidget {
   const ArticleScreen(
@@ -14,7 +14,7 @@ class ArticleScreen extends StatelessWidget {
   final Article article;
   final Favorite favorite;
   final HistoryModel history;
-  static const routeName = '/article';
+  static const routeName = "/article";
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ void showConfirmationBottomSheet(BuildContext context, HistoryModel history,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Do you want to add this article to favorites?',
+              "Do you want to add this article to favorites?",
               style: TextStyle(fontSize: 18.0),
             ),
             SizedBox(height: 16.0),
@@ -68,18 +68,18 @@ void showConfirmationBottomSheet(BuildContext context, HistoryModel history,
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Article added to favorites!'),
+                        content: Text("Article added to favorites!"),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   },
-                  child: Text('Yes'),
+                  child: Text("Yes"),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('No'),
+                  child: Text("No"),
                 ),
               ],
             ),

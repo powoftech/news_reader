@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:news_reader/screens/article_screen.dart';
-import 'package:news_reader/widgets/image_container.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/widgets/image_container.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class FollowingScreen extends StatelessWidget {
   const FollowingScreen(
@@ -12,7 +12,7 @@ class FollowingScreen extends StatelessWidget {
   final Favorite favorite;
   final HistoryModel history;
 
-  static const routeName = '/following';
+  static const routeName = "/following";
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.favorite),
                 SizedBox(width: 10),
-                Text('Later Readings',
+                Text("Later Readings",
                     style: Provider.of<ThemeProvider>(context)
                         .getThemeData(context)
                         .textTheme
@@ -103,12 +103,12 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${DateTime.now().difference(DateTime.parse(favorite.articles![index].publishedAt!)).inHours} hours ago',
+                              "${DateTime.now().difference(DateTime.parse(favorite.articles![index].publishedAt!)).inHours} hours ago",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Flexible(
                               child: Text(
-                                ' by ${favorite.articles![index].author}',
+                                " by ${favorite.articles![index].author}",
                                 style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -128,7 +128,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.history),
                 SizedBox(width: 10),
-                Text('History',
+                Text("History",
                     style: Provider.of<ThemeProvider>(context)
                         .getThemeData(context)
                         .textTheme
@@ -182,12 +182,12 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${DateTime.now().difference(DateTime.parse(history.articles![index].publishedAt!)).inHours} hours ago',
+                              "${DateTime.now().difference(DateTime.parse(history.articles![index].publishedAt!)).inHours} hours ago",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Flexible(
                               child: Text(
-                                ' by ${history.articles![index].author}',
+                                " by ${history.articles![index].author}",
                                 style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -221,7 +221,7 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
             children: [
               Icon(Icons.favorite),
               SizedBox(width: 10),
-              Text('Later Readings',
+              Text("Later Readings",
                   style: Provider.of<ThemeProvider>(context)
                       .getThemeData(context)
                       .textTheme
@@ -232,7 +232,7 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
         SizedBox(
           height: 250,
           child: Center(
-            child: Text('Empty',
+            child: Text("Empty",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme
@@ -245,7 +245,7 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
             children: [
               Icon(Icons.history),
               SizedBox(width: 10),
-              Text('History',
+              Text("History",
                   style: Provider.of<ThemeProvider>(context)
                       .getThemeData(context)
                       .textTheme
@@ -256,7 +256,7 @@ class _EmptyHistoryandFavorite extends StatelessWidget {
         SizedBox(
           height: 250,
           child: Center(
-            child: Text('Empty',
+            child: Text("Empty",
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:news_reader/models/article_model.dart';
-import 'package:news_reader/models/favorite_model.dart';
-import 'package:news_reader/models/history_model.dart';
-import 'package:news_reader/screens/article_screen.dart';
-import 'package:news_reader/widgets/image_container.dart';
-import 'package:news_reader/widgets/theme_provider.dart';
-import 'package:provider/provider.dart';
+import "package:flutter/material.dart";
+import "package:news_reader/models/article_model.dart";
+import "package:news_reader/models/favorite_model.dart";
+import "package:news_reader/models/history_model.dart";
+import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/widgets/image_container.dart";
+import "package:news_reader/widgets/theme_provider.dart";
+import "package:provider/provider.dart";
 
 class ViewAllArticlesScreen extends StatelessWidget {
   const ViewAllArticlesScreen(
@@ -13,7 +13,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
       required this.articles,
       required this.favorite,
       required this.history});
-  static const routeName = '/view';
+  static const routeName = "/view";
   final List<Article> articles;
   final HistoryModel history;
   final Favorite favorite;
@@ -26,7 +26,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
           .surface,
       appBar: AppBar(
         title: Text(
-          'View All',
+          "View All",
           style: Provider.of<ThemeProvider>(context)
               .getThemeData(context)
               .textTheme
@@ -84,7 +84,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                     width: 5,
                                   ),
                                   Text(
-                                      '${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago',
+                                      "${DateTime.now().difference(DateTime.parse(articles[index].publishedAt!)).inHours} hours ago",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),
@@ -98,7 +98,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  Text('1224 views',
+                                  Text("1224 views",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),
