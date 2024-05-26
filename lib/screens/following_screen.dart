@@ -10,7 +10,7 @@ class FollowingScreen extends StatelessWidget {
   const FollowingScreen(
       {super.key, required this.favorite, required this.history});
   final Favorite favorite;
-  final HistoryModel history;
+  final History history;
 
   static const routeName = "/following";
 
@@ -31,7 +31,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
   });
 
   final Favorite favorite;
-  final HistoryModel history;
+  final History history;
 
   @override
   Widget build(BuildContext context) {

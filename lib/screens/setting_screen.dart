@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:news_reader/screens/sign_in_screen.dart";
+import "package:news_reader/auth.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
@@ -204,21 +204,16 @@ class _SettingScreenState extends State<SettingScreen> {
 class _SignOutSettingsButton extends StatelessWidget {
   const _SignOutSettingsButton();
 
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SignInScreen(
-                email: "",
-              ),
-            ),
-          );
-        },
+        onPressed: signOut,
         style: ElevatedButton.styleFrom(
           backgroundColor: Provider.of<ThemeProvider>(context)
                       .getThemeData(context)

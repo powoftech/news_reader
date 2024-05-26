@@ -13,7 +13,7 @@ class ArticleScreen extends StatelessWidget {
       required this.history});
   final Article article;
   final Favorite favorite;
-  final HistoryModel history;
+  final History history;
   static const routeName = "/article";
 
   @override
@@ -43,7 +43,7 @@ class ArticleScreen extends StatelessWidget {
   }
 }
 
-void showConfirmationBottomSheet(BuildContext context, HistoryModel history,
+void showConfirmationBottomSheet(BuildContext context, History history,
     Favorite favorite, Article article) {
   showModalBottomSheet(
     context: context,

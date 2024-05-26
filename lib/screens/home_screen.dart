@@ -13,12 +13,15 @@ class HomeScreen extends StatelessWidget {
   static const routeName = "/";
   final List<Article> articles;
   final Favorite favorite;
-  final HistoryModel history;
-  const HomeScreen(
-      {super.key,
-      required this.articles,
-      required this.favorite,
-      required this.history});
+  final History history;
+
+  const HomeScreen({
+    super.key,
+    required this.articles,
+    required this.favorite,
+    required this.history,
+  });
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData =
@@ -30,9 +33,15 @@ class HomeScreen extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           _NewsOfTheDay(
-              articles: articles, history: history, favorite: favorite),
+            articles: articles,
+            history: history,
+            favorite: favorite,
+          ),
           _BreakingNews(
-              articles: articles, history: history, favorite: favorite),
+            articles: articles,
+            history: history,
+            favorite: favorite,
+          ),
         ],
       ),
     );
@@ -46,7 +55,7 @@ class _BreakingNews extends StatelessWidget {
     required this.favorite,
   });
   final List<Article> articles;
-  final HistoryModel history;
+  final History history;
   final Favorite favorite;
   @override
   Widget build(BuildContext context) {
@@ -57,11 +66,13 @@ class _BreakingNews extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Breaking News",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .titleLarge),
+              Text(
+                "Breaking News",
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .titleLarge,
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -75,11 +86,13 @@ class _BreakingNews extends StatelessWidget {
                     ),
                   );
                 },
-                child: Text("More",
-                    style: Provider.of<ThemeProvider>(context)
-                        .getThemeData(context)
-                        .textTheme
-                        .titleLarge),
+                child: Text(
+                  "More",
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .titleLarge,
+                ),
               ),
             ],
           ),
@@ -166,7 +179,7 @@ class _NewsOfTheDay extends StatelessWidget {
   });
 
   final List<Article> articles;
-  final HistoryModel history;
+  final History history;
   final Favorite favorite;
   @override
   Widget build(BuildContext context) {
@@ -196,32 +209,38 @@ class _NewsOfTheDay extends StatelessWidget {
             CustomTag(
               backgroundColor: Colors.grey.withAlpha(150),
               children: [
-                Text("News of the Day",
-                    style: Provider.of<ThemeProvider>(context)
-                        .getThemeData(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white)),
+                Text(
+                  "News of the Day",
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.white),
+                ),
               ],
             ),
             const SizedBox(height: 10),
-            Text(articles[0].title!,
-                style: Provider.of<ThemeProvider>(context)
-                    .getThemeData(context)
-                    .textTheme
-                    .displayLarge!
-                    .copyWith(color: Colors.white)),
+            Text(
+              articles[0].title!,
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .displayLarge!
+                  .copyWith(color: Colors.white),
+            ),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               child: Row(
                 children: [
-                  Text("Learn More",
-                      style: Provider.of<ThemeProvider>(context)
-                          .getThemeData(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: Colors.white)),
+                  Text(
+                    "Learn More",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: Colors.white),
+                  ),
                   const SizedBox(width: 10),
                   Icon(Icons.arrow_right_alt, color: Colors.white),
                 ],

@@ -10,7 +10,7 @@ import "package:provider/provider.dart";
 class SearchScreen extends StatelessWidget {
   static const routeName = "/discover";
   final List<Article> articles;
-  final HistoryModel history;
+  final History history;
   final Favorite favorite;
   const SearchScreen(
       {super.key,
@@ -86,7 +86,7 @@ class _CategoryNews extends StatelessWidget {
   final List<String> tabs;
   final List<Article> articles;
   final Favorite favorite;
-  final HistoryModel history;
+  final History history;
   @override
   Widget build(BuildContext context) {
     return Column(

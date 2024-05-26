@@ -30,7 +30,7 @@ class ForgotPasswordScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
               child: Text(
                 "Enter your email address or username, and we'll send you a link to get back into your account.",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.normal),
               ),
             ),
             TextFormField(

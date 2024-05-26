@@ -1,9 +1,9 @@
 import "package:news_reader/models/article_model.dart";
 
-class HistoryModel {
+class History {
   String? id;
   List<Article>? articles;
-  HistoryModel({
+  History({
     required this.id,
     required this.articles,
   });
