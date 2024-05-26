@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:news_reader/screens/login_screen.dart";
+import "package:news_reader/screens/sign_in_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
@@ -9,7 +9,7 @@ class SettingScreen extends StatefulWidget {
   static const routeName = "/setting";
 
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  State<SettingScreen> createState() => _SettingScreenState();
 }
 
 class _SettingScreenState extends State<SettingScreen> {
@@ -34,7 +34,7 @@ class _SettingScreenState extends State<SettingScreen> {
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
-                  .displayMedium,
+                  .displayLarge,
             ),
             SizedBox(
               height: 8,
@@ -126,10 +126,10 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
             SizedBox(height: 10),
-            _LogoutSettingButton(),
+            _SignOutSettingsButton(),
             SizedBox(height: 20),
             Text(
-              "App version: 1.0.00",
+              "App version: 1.0.0",
             ),
             SizedBox(height: 10),
             // Text(
@@ -201,8 +201,8 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 }
 
-class _LogoutSettingButton extends StatelessWidget {
-  const _LogoutSettingButton();
+class _SignOutSettingsButton extends StatelessWidget {
+  const _SignOutSettingsButton();
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,9 @@ class _LogoutSettingButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) => SignInScreen(
+                email: "",
+              ),
             ),
           );
         },
@@ -243,11 +245,11 @@ class _LogoutSettingButton extends StatelessWidget {
             ), // Add the icon
             SizedBox(width: 8), // Add some spacing between icon and text
             Text(
-              "Logout", // Add the text
+              "Sign out", // Add the text
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
-                  .displayLarge!
+                  .bodyLarge!
                   .copyWith(
                     color: Provider.of<ThemeProvider>(context)
                                 .getThemeData(context)
