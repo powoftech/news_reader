@@ -9,8 +9,8 @@ import "package:news_reader/models/news.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/forgot_password_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
-import "package:news_reader/screens/login_screen.dart";
-import "package:news_reader/screens/register_screen.dart";
+import "package:news_reader/screens/sign_in_screen.dart";
+import "package:news_reader/screens/sign_up_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
 import "package:news_reader/screens/setting_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
@@ -68,8 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final User? user = Auth().currentUser;
 
-  Future<void> logout() async {
-    await Auth().logout();
+  Future<void> signOut() async {
+    await Auth().signOut();
   }
 
   Widget _title() {
@@ -80,9 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Text(user?.email ?? "User email");
   }
 
-  Widget _logoutButton() {
+  Widget _signOutButton() {
     return ElevatedButton(
-      onPressed: logout,
+      onPressed: signOut,
       child: Text("Logout"),
     );
   }
@@ -109,8 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
               history: history,
               key: PageStorageKey<String>("FollowingScreen")),
           SettingScreen(key: PageStorageKey<String>("SettingScreen")),
-          LoginScreen(key: PageStorageKey<String>("LoginScreen")),
-          RegisterScreen(key: PageStorageKey<String>("RegisterScreen")),
+          SignInScreen(
+            key: PageStorageKey<String>("SignInScreen"),
+            email: "",
+          ),
+          SignUpScreen(
+            key: PageStorageKey<String>("SignUpScreen"),
+            email: "",
+          ),
           ForgotPasswordScreen(
               key: PageStorageKey<String>("ForgotPasswordScreen")),
         ];
@@ -120,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int currentTab = 0;
   final PageStorageBucket _bucket = PageStorageBucket();
-  
+
   @override
   Widget build(BuildContext context) {
     if (pages == null) {
@@ -130,10 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     }
-    
+
     ThemeData themeData = ThemeProvider().getThemeData(context);
     bool isDarkMode = themeData.brightness == Brightness.dark;
-    
+
     return Scaffold(
       body: PageStorage(
         bucket: _bucket,
