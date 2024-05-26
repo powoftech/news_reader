@@ -3,10 +3,13 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
 import "package:news_reader/models/news.dart";
+import "package:news_reader/screens/change_password_screen.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
-import "package:news_reader/screens/setting_screen.dart";
+import "package:news_reader/screens/setting_screen_guest.dart";
+import "package:news_reader/screens/setting_screen_user.dart";
+import "package:news_reader/screens/setting_user_settings.dart";
 import "package:news_reader/screens/waiting_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 
@@ -75,8 +78,17 @@ class _AppScreenState extends State<AppScreen> {
             history: history,
             key: PageStorageKey<String>("FollowingScreen"),
           ),
-          SettingScreen(
+          SettingScreenUser(
             key: PageStorageKey<String>("SettingScreen"),
+          ),
+          SettingScreenGuest(
+            key: PageStorageKey<String>("SettingScreenGuest"),
+          ),
+          SettingScreenUserSettings(
+            key: PageStorageKey<String>("SettingScreenUserSettings"),
+          ),
+          ChangePasswordScreen(
+            key: PageStorageKey<String>("ChangePasswordScreen"),
           ),
         ];
       });
@@ -127,7 +139,7 @@ class _AppScreenState extends State<AppScreen> {
             label: "Following",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.person),
             label: "Setting",
           ),
         ],

@@ -71,6 +71,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     hintText: "Email",
                     filled: true,
+                    fillColor: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .colorScheme
+                                .brightness ==
+                            Brightness.light
+                        ? Colors.grey.shade200
+                        : Colors.grey.shade800,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                       borderSide: BorderSide.none,
@@ -84,6 +91,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     hintText: "Username",
                     filled: true,
+                    fillColor: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .colorScheme
+                                .brightness ==
+                            Brightness.light
+                        ? Colors.grey.shade200
+                        : Colors.grey.shade800,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                       borderSide: BorderSide.none,
@@ -96,6 +110,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     hintText: "Password",
                     filled: true,
+                    fillColor: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .colorScheme
+                                .brightness ==
+                            Brightness.light
+                        ? Colors.grey.shade200
+                        : Colors.grey.shade800,
                     suffixIcon: GestureDetector(
                       onTap: () {
                         setState(() {

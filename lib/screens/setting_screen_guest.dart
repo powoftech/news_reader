@@ -3,16 +3,16 @@ import "package:news_reader/auth.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({super.key});
+class SettingScreenGuest extends StatefulWidget {
+  const SettingScreenGuest({super.key});
 
-  static const routeName = "/setting";
+  static const routeName = "/setting_customer";
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  State<SettingScreenGuest> createState() => _SettingScreenGuestState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingScreenGuestState extends State<SettingScreenGuest> {
   int selectedButtonIndex = 0; // Default index of the selected button
 
   @override
@@ -30,7 +30,7 @@ class _SettingScreenState extends State<SettingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Select Language",
+              "Select language",
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
@@ -126,7 +126,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
             SizedBox(height: 10),
-            _SignOutSettingsButton(),
+            _LogInSettingsButton(),
             SizedBox(height: 20),
             Text(
               "App version: 1.0.0",
@@ -201,8 +201,8 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 }
 
-class _SignOutSettingsButton extends StatelessWidget {
-  const _SignOutSettingsButton();
+class _LogInSettingsButton extends StatelessWidget {
+  const _LogInSettingsButton();
 
   Future<void> signOut() async {
     await Auth().signOut();
@@ -230,7 +230,7 @@ class _SignOutSettingsButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.logout,
+              Icons.login,
               color: Provider.of<ThemeProvider>(context)
                           .getThemeData(context)
                           .brightness ==
@@ -240,7 +240,7 @@ class _SignOutSettingsButton extends StatelessWidget {
             ), // Add the icon
             SizedBox(width: 8), // Add some spacing between icon and text
             Text(
-              "Sign out", // Add the text
+              "Login", // Add the text
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
