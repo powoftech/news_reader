@@ -14,11 +14,11 @@ class ForgotPasswordScreen extends StatelessWidget {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text("Forgot Password?",
+        title: Text("Reset your password",
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
-                .displayMedium),
+                .displayLarge),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -29,13 +29,13 @@ class ForgotPasswordScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
               child: Text(
-                "Fill in your registered email. If the email is valid, you will receive reset password instruction via email",
+                "Enter your email address or username, and we'll send you a link to get back into your account.",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             TextFormField(
               decoration: InputDecoration(
-                hintText: "Email",
+                hintText: "Email address or username",
                 fillColor: Provider.of<ThemeProvider>(context)
                             .getThemeData(context)
                             .brightness ==
@@ -61,7 +61,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 minimumSize: Size(double.infinity, 0),
               ),
               child: Text(
-                "Reset Password",
+                "Send link",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
