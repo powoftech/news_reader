@@ -8,6 +8,7 @@ class Article {
   String? urlToImage;
   String? publishedAt;
   String? view;
+  List<String>? topic;
 
   Article({
     required this.id,
@@ -17,5 +18,6 @@ class Article {
     required this.urlToImage,
     required this.publishedAt,
     required this.view,
+    required this.topic,
   });
 }

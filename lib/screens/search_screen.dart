@@ -106,109 +106,100 @@ class _CategoryNews extends StatelessWidget {
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.55,
           child: TabBarView(
-            children: tabs
-                .map((tab) => ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 9,
-                      itemBuilder: ((context, index) {
-                        return InkWell(
-                          onTap: () async {
-                            articles[index + 1].view =
-                                (int.parse(articles[index + 1].view!) + 1)
-                                    .toString();
-                            await updateFieldInFirebase(
-                                "article",
-                                articles[index + 1].id!,
-                                "view",
-                                int.parse(articles[index + 1].view!));
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ArticleScreen(
-                                  article: articles[index],
-                                  favorite: favorite,
-                                  history: history,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Row(
+            children: tabs.map((tab) {
+              final filteredArticles = articles
+                  .where(
+                      (article) => article.topic!.contains(tab.toLowerCase()))
+                  .toList();
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredArticles.length,
+                itemBuilder: (context, index) {
+                  final currentArticle = filteredArticles[index];
+                  return InkWell(
+                    onTap: () async {
+                      currentArticle.view =
+                          (int.parse(currentArticle.view!) + 1).toString();
+                      await updateFieldInFirebase(
+                        "article",
+                        currentArticle.id!,
+                        "view",
+                        int.parse(currentArticle.view!),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArticleScreen(
+                            article: currentArticle,
+                            favorite: favorite,
+                            history: history,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ImageContainer(
+                            width: 80,
+                            height: 80,
+                            borderRadius: 5,
+                            imageUrl: currentArticle.urlToImage!,
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: ImageContainer(
-                                  width: 80,
-                                  height: 80,
-                                  borderRadius: 5,
-                                  imageUrl: articles[index].urlToImage!,
-                                ),
+                              Text(
+                                currentArticle.title!,
+                                maxLines: 2,
+                                overflow: TextOverflow.clip,
+                                style: Provider.of<ThemeProvider>(context)
+                                    .getThemeData(context)
+                                    .textTheme
+                                    .bodyLarge!,
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(articles[index].title!,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.clip,
-                                        style:
-                                            Provider.of<ThemeProvider>(context)
-                                                .getThemeData(context)
-                                                .textTheme
-                                                .bodyLarge!),
-                                    const SizedBox(
-                                      height: 10,
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.schedule, size: 18),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      "${currentArticle.publishedAt}",
+                                      style: Provider.of<ThemeProvider>(context)
+                                          .getThemeData(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.schedule,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            "${articles[index].publishedAt}",
-                                            style: Provider.of<ThemeProvider>(
-                                                    context)
-                                                .getThemeData(context)
-                                                .textTheme
-                                                .bodyMedium,
-                                            maxLines: 1, // Ensure single line
-                                            overflow: TextOverflow
-                                                .ellipsis, // Handle potential overflow
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        const Icon(
-                                          Icons.visibility,
-                                          size: 18,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "${articles[index].view} views",
-                                          style: Provider.of<ThemeProvider>(
-                                                  context)
-                                              .getThemeData(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
+                                  ),
+                                  const Spacer(),
+                                  const Icon(Icons.visibility, size: 18),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${currentArticle.view} views",
+                                    style: Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .textTheme
+                                        .bodyMedium,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                        );
-                      }),
-                    ))
-                .toList(),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
         ),
       ],

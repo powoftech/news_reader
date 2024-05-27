@@ -2,6 +2,14 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:news_reader/controllers/date_formatter.dart";
 import "package:news_reader/models/article_model.dart";
 
+List<dynamic> uppercaseFirstLetters(List<dynamic> list) {
+  final uppercaseList = <dynamic>[];
+  for (var item in list) {
+    uppercaseList.add(item[0].toUpperCase() + item.substring(1));
+  }
+  return uppercaseList;
+}
+
 class News {
   List<Article> news = [];
   final firestore = FirebaseFirestore.instance;
@@ -34,10 +42,14 @@ class News {
         urlToImage: data["image"],
         publishedAt: publishedAt,
         view: data["view"].toString(),
+        topic: List<String>.from(data["topic"])
+            .map((item) => item.toString())
+            .toList(),
       );
       // Add article to the list
       news.add(article);
-      final articleTopics = data["topic"] as List<dynamic>;
+      final articleTopics =
+          uppercaseFirstLetters(data["topic"] as List<dynamic>);
       allTopics.addAll(articleTopics.expand((topic) => [topic]));
     }
   }
