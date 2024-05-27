@@ -1,7 +1,6 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/models/article_model.dart";
-import "package:news_reader/models/favorite_model.dart";
-import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/screens/view_all_screen.dart";
 import "package:news_reader/widgets/custom_tag.dart";
@@ -10,13 +9,14 @@ import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
+// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   static const routeName = "/";
   final List<Article> articles;
-  final Favorite favorite;
-  final History history;
+  late DocumentReference<Map<String, dynamic>> favorite;
+  late DocumentReference<Map<String, dynamic>> history;
 
-  const HomeScreen({
+  HomeScreen({
     super.key,
     required this.articles,
     required this.favorite,
@@ -49,15 +49,16 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class _BreakingNews extends StatelessWidget {
-  const _BreakingNews({
+  _BreakingNews({
     required this.articles,
     required this.history,
     required this.favorite,
   });
   final List<Article> articles;
-  final History history;
-  final Favorite favorite;
+  late DocumentReference<Map<String, dynamic>> favorite;
+  late DocumentReference<Map<String, dynamic>> history;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -127,8 +128,42 @@ class _BreakingNews extends StatelessWidget {
                           ),
                         ),
                       );
+                      final historyData = await history.get();
+                      final articleExistence =
+                          historyData.data()!["articles"][0]["article"];
+                      if (articleExistence == "") {
+                        history.update({
+                          "articles": ([
+                            {
+                              "article": FirebaseFirestore.instance
+                                  .collection("article")
+                                  .doc(articles[index + 1].id!),
+                              "dateRead": Timestamp.now(),
+                            }
+                          ])
+                        });
+                      } else {
+                        List<dynamic> existingArticleIds = historyData
+                            .data()!["articles"]
+                            .map((article) => article["article"].id)
+                            .toList();
 
-                      history.articles?.add(articles[index + 1]);
+                        // Check if the article exists
+                        if (!existingArticleIds
+                            .contains(articles[index + 1].id)) {
+                          // If the article doesn't exist, update the articles field
+                          history.update({
+                            "articles": FieldValue.arrayUnion([
+                              {
+                                "article": FirebaseFirestore.instance
+                                    .collection("article")
+                                    .doc(articles[index + 1].id!),
+                                "dateRead": Timestamp.now(),
+                              }
+                            ])
+                          });
+                        }
+                      }
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,12 +223,15 @@ class _NewsOfTheDay extends StatelessWidget {
   });
 
   final List<Article> articles;
-  final History history;
-  final Favorite favorite;
+  final dynamic history;
+  final dynamic favorite;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        articles[0].view = (int.parse(articles[0].view!) + 1).toString();
+        await updateFieldInFirebase(
+            "article", articles[0].id!, "view", int.parse(articles[0].view!));
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -204,7 +242,40 @@ class _NewsOfTheDay extends StatelessWidget {
             ),
           ),
         );
-        history.articles?.add(articles[0]);
+        final historyData = await history.get();
+        final articleExistence = historyData.data()!["articles"][0]["article"];
+        if (articleExistence == "") {
+          history.update({
+            "articles": ([
+              {
+                "article": FirebaseFirestore.instance
+                    .collection("article")
+                    .doc(articles[0].id!),
+                "dateRead": Timestamp.now(),
+              }
+            ])
+          });
+        } else {
+          List<dynamic> existingArticleIds = historyData
+              .data()!["articles"]
+              .map((article) => article["article"].id)
+              .toList();
+
+          // Check if the article exists
+          if (!existingArticleIds.contains(articles[0].id)) {
+            // If the article doesn't exist, update the articles field
+            history.update({
+              "articles": FieldValue.arrayUnion([
+                {
+                  "article": FirebaseFirestore.instance
+                      .collection("article")
+                      .doc(articles[0].id!),
+                  "dateRead": Timestamp.now(),
+                }
+              ])
+            });
+          }
+        }
       },
       child: ImageContainer(
         height: MediaQuery.of(context).size.height * 0.45,

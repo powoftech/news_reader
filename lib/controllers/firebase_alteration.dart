@@ -1,4 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:news_reader/models/article_model.dart";
 
 Future<void> updateFieldInFirebase(String enitty, String documentId,
     String fieldName, dynamic newValue) async {
@@ -13,4 +14,8 @@ Future<void> updateFieldInFirebase(String enitty, String documentId,
   } on FirebaseException catch (e) {
     print("Error updating field: $e"); // Handle potential errors
   }
+}
+
+Article getArticleById(List<Article> articles, String id) {
+  return articles.firstWhere((article) => article.id == id);
 }

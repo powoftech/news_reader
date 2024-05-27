@@ -1,8 +1,7 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 import "package:news_reader/models/article_model.dart";
-import "package:news_reader/models/favorite_model.dart";
-import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
@@ -18,8 +17,8 @@ class SearchArticleScreen extends StatelessWidget {
       required this.keyword});
   static const routeName = "/search-result";
   final List<Article> articles;
-  final History history;
-  final Favorite favorite;
+  final dynamic history;
+  final dynamic favorite;
   final String keyword;
   @override
   Widget build(BuildContext context) {
@@ -70,6 +69,42 @@ class SearchArticleScreen extends StatelessWidget {
                             ),
                           ),
                         );
+                        final historyData = await history.get();
+                        final articleExistence =
+                            historyData.data()!["articles"][0]["article"];
+                        if (articleExistence == "") {
+                          history.update({
+                            "articles": ([
+                              {
+                                "article": FirebaseFirestore.instance
+                                    .collection("article")
+                                    .doc(articles[index].id!),
+                                "dateRead": Timestamp.now(),
+                              }
+                            ])
+                          });
+                        } else {
+                          List<dynamic> existingArticleIds = historyData
+                              .data()!["articles"]
+                              .map((article) => article["article"].id)
+                              .toList();
+
+                          // Check if the article exists
+                          if (!existingArticleIds
+                              .contains(articles[index].id)) {
+                            // If the article doesn't exist, update the articles field
+                            history.update({
+                              "articles": FieldValue.arrayUnion([
+                                {
+                                  "article": FirebaseFirestore.instance
+                                      .collection("article")
+                                      .doc(articles[index].id!),
+                                  "dateRead": Timestamp.now(),
+                                }
+                              ])
+                            });
+                          }
+                        }
                       },
                       child: Row(
                         children: [

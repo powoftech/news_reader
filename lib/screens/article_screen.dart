@@ -1,8 +1,8 @@
 import "dart:async";
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/models/article_model.dart";
-import "package:news_reader/models/favorite_model.dart";
-import "package:news_reader/models/history_model.dart";
+
 import "package:webview_flutter/webview_flutter.dart";
 
 class ArticleScreen extends StatelessWidget {
@@ -12,8 +12,8 @@ class ArticleScreen extends StatelessWidget {
       required this.favorite,
       required this.history});
   final Article article;
-  final Favorite favorite;
-  final History history;
+  final dynamic favorite;
+  final dynamic history;
   static const routeName = "/article";
 
   @override
@@ -43,8 +43,8 @@ class ArticleScreen extends StatelessWidget {
   }
 }
 
-void showConfirmationBottomSheet(BuildContext context, History history,
-    Favorite favorite, Article article) {
+void showConfirmationBottomSheet(
+    BuildContext context, dynamic history, dynamic favorite, Article article) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -62,16 +62,59 @@ void showConfirmationBottomSheet(BuildContext context, History history,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Add article to favorites
-                    favorite.articles?.add(article);
+                    final favoriteData = await favorite.get();
+                    final articleExistence =
+                        favoriteData.data()!["articles"][0]["article"];
+                    if (articleExistence == "") {
+                      favorite.update({
+                        "articles": ([
+                          {
+                            "article": FirebaseFirestore.instance
+                                .collection("article")
+                                .doc(article.id!),
+                            "dateRead": Timestamp.now(),
+                          }
+                        ])
+                      });
+                    } else {
+                      List<dynamic> existingArticleIds = favoriteData
+                          .data()!["articles"]
+                          .map((article) => article["article"].id)
+                          .toList();
+
+                      // Check if the article exists
+                      if (!existingArticleIds.contains(article.id)) {
+                        // If the article doesn't exist, update the articles field
+                        favorite.update({
+                          "articles": FieldValue.arrayUnion([
+                            {
+                              "article": FirebaseFirestore.instance
+                                  .collection("article")
+                                  .doc(article.id!),
+                              "dateRead": Timestamp.now(),
+                            }
+                          ])
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Article added to favorites!"),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        // If the article already exists, show a SnackBar
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "This article is already in your favorites list!"),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    }
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Article added to favorites!"),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
                   },
                   child: Text("Yes"),
                 ),

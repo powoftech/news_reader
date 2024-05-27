@@ -1,7 +1,6 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/models/article_model.dart";
-import "package:news_reader/models/favorite_model.dart";
-import "package:news_reader/models/history_model.dart";
 import "package:news_reader/controllers/news.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
@@ -19,15 +18,18 @@ class AppScreen extends StatefulWidget {
 
 class _AppScreenState extends State<AppScreen> {
   List<Article> articles = [];
-  Favorite favorite = Favorite(id: "1", articles: []);
-  History history = History(id: "1", articles: []);
+  late DocumentReference<Map<String, dynamic>> favorite;
+  late DocumentReference<Map<String, dynamic>> history;
   List<Widget>? pages;
   List<String>? uniqueTopics;
+  String user = "";
   Future<void> _fetchNews() async {
     News newsService = News();
     await newsService.getNews();
     articles = newsService.news;
     uniqueTopics = newsService.allTopics.toList();
+    history = newsService.history;
+    favorite = newsService.favorite;
   }
 
   @override
@@ -51,6 +53,7 @@ class _AppScreenState extends State<AppScreen> {
             key: PageStorageKey<String>("SearchScreen"),
           ),
           FollowingScreen(
+            articles: articles,
             favorite: favorite,
             history: history,
             key: PageStorageKey<String>("FollowingScreen"),

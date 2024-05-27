@@ -1,4 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/controllers/date_formatter.dart";
 import "package:news_reader/models/article_model.dart";
 
@@ -15,12 +16,46 @@ class News {
   final firestore = FirebaseFirestore.instance;
   final dateFormatter = DateFormatter();
   final allTopics = <String>{};
+  late DocumentReference<Map<String, dynamic>> favorite;
+  late DocumentReference<Map<String, dynamic>> history;
   Future<void> getNews() async {
-    final collectionRef = firestore
+    final uid = Auth().currentUser?.uid;
+    final user = firestore.collection("user").doc(uid);
+    final userhistory =
+        FirebaseFirestore.instance.collection("history").doc(uid);
+    final userfavorite =
+        FirebaseFirestore.instance.collection("readLater").doc(uid);
+    userhistory.get().then((docSnapshot) async {
+      if (!docSnapshot.exists) {
+        await userhistory.set({
+          "articles": {
+            {
+              "article": "",
+              "dateRead": Timestamp.now(),
+            },
+          },
+          "user": user,
+        });
+      }
+    });
+    userfavorite.get().then((docSnapshot) async {
+      if (!docSnapshot.exists) {
+        await userfavorite.set({
+          "articles": {
+            {
+              "article": "",
+              "dateRead": Timestamp.now(),
+            },
+          },
+          "user": user,
+        });
+      }
+    });
+    final articleRef = firestore
         .collection("article")
         .orderBy("datePublished", descending: true)
         .limit(50);
-    final querySnapshot = await collectionRef.get();
+    final querySnapshot = await articleRef.get();
 
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data();
@@ -52,5 +87,7 @@ class News {
           uppercaseFirstLetters(data["topic"] as List<dynamic>);
       allTopics.addAll(articleTopics.expand((topic) => [topic]));
     }
+    favorite = userfavorite;
+    history = userhistory;
   }
 }
