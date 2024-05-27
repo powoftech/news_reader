@@ -13,24 +13,16 @@ class SearchScreen extends StatelessWidget {
   final List<Article> articles;
   final History history;
   final Favorite favorite;
+  final List<String>? uniqueTopics;
   const SearchScreen(
       {super.key,
       required this.articles,
       required this.history,
       required this.favorite,
-      List<String>? uniqueTopics});
+      required this.uniqueTopics});
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = [
-      "All",
-      "World",
-      "Politics",
-      "Business",
-      "Tech",
-      "Science",
-      "Sports",
-      "Health",
-    ];
+    List<String> tabs = uniqueTopics!;
     return DefaultTabController(
       initialIndex: 0,
       length: tabs.length,

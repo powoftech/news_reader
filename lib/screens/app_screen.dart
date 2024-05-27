@@ -27,7 +27,7 @@ class _AppScreenState extends State<AppScreen> {
     News newsService = News();
     await newsService.getNews();
     articles = newsService.news;
-    uniqueTopics = newsService.allTopics.toSet().toList();
+    uniqueTopics = newsService.allTopics.toList();
   }
 
   @override
@@ -36,7 +36,6 @@ class _AppScreenState extends State<AppScreen> {
 
     _fetchNews().then((_) {
       setState(() {
-        articles = articles;
         pages = [
           HomeScreen(
             articles: articles,

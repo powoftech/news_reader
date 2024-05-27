@@ -37,15 +37,15 @@ class News {
       Article article = Article(
         id: doc.id,
         title: data["title"],
-        author: data["author"],
+        author: data["author"][0],
         url: data["url"],
         urlToImage: data["image"],
-        publishedAt: formattedDate,
+        publishedAt: datePublished.toString(),
         view: data["view"].toString(),
       );
       // Add article to the list
       news.add(article);
-      final articleTopics = data["topic"] as List<String>;
+      final articleTopics = data["topic"] as List<dynamic>;
       allTopics.addAll(articleTopics.expand((topic) => [topic]));
     }
   }
