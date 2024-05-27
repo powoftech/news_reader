@@ -22,20 +22,21 @@ class _AppScreenState extends State<AppScreen> {
   Favorite favorite = Favorite(id: "1", articles: []);
   History history = History(id: "1", articles: []);
   List<Widget>? pages;
-
-  Future<List<Article>> _fetchNews() async {
+  List<String>? uniqueTopics;
+  Future<void> _fetchNews() async {
     News newsService = News();
     await newsService.getNews();
-    return newsService.news;
+    articles = newsService.news;
+    uniqueTopics = newsService.allTopics.toSet().toList();
   }
 
   @override
   void initState() {
     super.initState();
 
-    _fetchNews().then((value) {
+    _fetchNews().then((_) {
       setState(() {
-        articles = value;
+        articles = articles;
         pages = [
           HomeScreen(
             articles: articles,
@@ -47,6 +48,7 @@ class _AppScreenState extends State<AppScreen> {
             articles: articles,
             favorite: favorite,
             history: history,
+            uniqueTopics: uniqueTopics,
             key: PageStorageKey<String>("SearchScreen"),
           ),
           FollowingScreen(

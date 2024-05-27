@@ -25,9 +25,11 @@ class News {
   List<Article> news = [];
   final firestore = FirebaseFirestore.instance;
   final dateFormatter = DateFormatter();
+  final allTopics = <String>{};
   Future<void> getNews() async {
     final collectionRef = firestore.collection("article");
     final querySnapshot = await collectionRef.get();
+
     for (var doc in querySnapshot.docs) {
       // Convert each document to a Map
       Map<String, dynamic> data = doc.data();
@@ -37,15 +39,16 @@ class News {
       Article article = Article(
         id: doc.id,
         title: data["title"],
-        author: "John Smith",
+        author: data["author"],
         url: data["url"],
-        urlToImage:
-            "https://media.istockphoto.com/id/1313654813/vector/megaphone-with-exciting-news-speech-bubble-banner-loudspeaker-label-for-business-marketing.jpg?s=612x612&w=0&k=20&c=0Gm0WhT6uMnzhvElm3OB5hu8_Dsn5SvfXfkMNuA_UAw=",
+        urlToImage: data["image"],
         publishedAt: formattedDate,
         view: data["view"].toString(),
       );
       // Add article to the list
       news.add(article);
+      final articleTopics = data["topic"] as List<String>;
+      allTopics.addAll(articleTopics.expand((topic) => [topic]));
     }
   }
 }

@@ -17,7 +17,8 @@ class SearchScreen extends StatelessWidget {
       {super.key,
       required this.articles,
       required this.history,
-      required this.favorite});
+      required this.favorite,
+      List<String>? uniqueTopics});
   @override
   Widget build(BuildContext context) {
     List<String> tabs = [
