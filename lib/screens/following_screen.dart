@@ -182,7 +182,7 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${DateTime.now().difference(DateTime.parse(history.articles![index].publishedAt!)).inHours} hours ago",
+                              "${history.articles![index].publishedAt}",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Flexible(

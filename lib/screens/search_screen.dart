@@ -4,6 +4,7 @@ import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
+import "package:news_reader/screens/search_result.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
@@ -35,7 +36,11 @@ class SearchScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
           child: ListView(
             children: [
-              const _DiscoverNews(),
+              _DiscoverNews(
+                articles: articles,
+                history: history,
+                favorite: favorite,
+              ),
               _CategoryNews(
                   tabs: tabs,
                   articles: articles,
@@ -208,7 +213,14 @@ class _CategoryNews extends StatelessWidget {
 }
 
 class _DiscoverNews extends StatelessWidget {
-  const _DiscoverNews();
+  const _DiscoverNews({
+    required this.articles,
+    required this.favorite,
+    required this.history,
+  });
+  final List<Article> articles;
+  final Favorite favorite;
+  final History history;
 
   @override
   Widget build(BuildContext context) {
@@ -233,24 +245,39 @@ class _DiscoverNews extends StatelessWidget {
                 .bodyMedium,
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: "Search for news",
-              filled: true,
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              suffixIcon: RotatedBox(
-                quarterTurns: 1,
-                child: const Icon(
-                  Icons.tune,
+          Form(
+            child: TextFormField(
+              onFieldSubmitted: (value) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchArticleScreen(
+                      articles: articles,
+                      history: history,
+                      favorite: favorite,
+                      keyword: value,
+                    ),
+                  ),
+                );
+              },
+              decoration: InputDecoration(
+                hintText: "Search for news",
+                filled: true,
+                prefixIcon: const Icon(
+                  Icons.search,
                   color: Colors.grey,
                 ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide.none,
+                suffixIcon: RotatedBox(
+                  quarterTurns: 1,
+                  child: const Icon(
+                    Icons.tune,
+                    color: Colors.grey,
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),

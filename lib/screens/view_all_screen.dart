@@ -41,17 +41,14 @@ class ViewAllArticlesScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height - 120,
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: articles.length - 1,
+              itemCount: articles.length,
               itemBuilder: ((context, index) {
                 return InkWell(
                   onTap: () async {
-                    articles[index + 1].view =
-                        (int.parse(articles[index + 1].view!) + 1).toString();
-                    await updateFieldInFirebase(
-                        "article",
-                        articles[index + 1].id!,
-                        "view",
-                        int.parse(articles[index + 1].view!));
+                    articles[index].view =
+                        (int.parse(articles[index].view!) + 1).toString();
+                    await updateFieldInFirebase("article", articles[index].id!,
+                        "view", int.parse(articles[index].view!));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
