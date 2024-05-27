@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:news_reader/auth.dart";
+import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/screens/app_screen.dart";
 import "package:news_reader/screens/authentication_screen.dart";
 

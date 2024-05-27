@@ -1,7 +1,7 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:intl/intl.dart";
 import "package:news_reader/models/article_model.dart";
-import "package:news_reader/widgets/date_formatter.dart";
+import "package:news_reader/controllers/date_formatter.dart";
 
 DateTime? parseFirestoreDateTime(String dateString) {
   try {

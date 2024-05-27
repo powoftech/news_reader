@@ -3,7 +3,7 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
 import "package:news_reader/screens/article_screen.dart";
-import "package:news_reader/widgets/firebase_alteration.dart";
+import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";

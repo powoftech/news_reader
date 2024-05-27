@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/models/favorite_model.dart";
 import "package:news_reader/models/history_model.dart";
-import "package:news_reader/models/news.dart";
+import "package:news_reader/controllers/news.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
 import "package:news_reader/screens/search_screen.dart";

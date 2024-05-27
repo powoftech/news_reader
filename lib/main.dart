@@ -1,9 +1,9 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/widget_tree.dart";
+import "package:news_reader/widgets/widget_tree.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
-import "firebase_options.dart";
+import "controllers/firebase_options.dart";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,5 +31,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

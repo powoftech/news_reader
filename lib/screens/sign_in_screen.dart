@@ -1,6 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/auth.dart";
+import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/screens/forgot_password_screen.dart";
 import "package:news_reader/screens/sign_up_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
