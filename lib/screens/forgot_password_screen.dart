@@ -18,7 +18,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
-                .displayLarge),
+                .displayLarge,),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

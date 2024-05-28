@@ -6,11 +6,12 @@ import "package:news_reader/models/article_model.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
 class ArticleScreen extends StatelessWidget {
-  const ArticleScreen(
-      {super.key,
-      required this.article,
-      required this.favorite,
-      required this.history});
+  const ArticleScreen({
+    super.key,
+    required this.article,
+    required this.favorite,
+    required this.history,
+  });
   final Article article;
   final dynamic favorite;
   final dynamic history;
@@ -27,9 +28,7 @@ class ArticleScreen extends StatelessWidget {
             onPressed: () {
               showConfirmationBottomSheet(context, history, favorite, article);
             },
-            icon: Icon(
-              Icons.bookmark_add_outlined, // Customize the icon as needed
-            ),
+            icon: Icon(Icons.bookmark_add_outlined),
           ),
         ],
       ),
@@ -44,7 +43,7 @@ class ArticleScreen extends StatelessWidget {
 }
 
 void showConfirmationBottomSheet(
-    BuildContext context, dynamic history, dynamic favorite, Article article) {
+    BuildContext context, dynamic history, dynamic favorite, Article article,) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -76,7 +75,7 @@ void showConfirmationBottomSheet(
                                 .doc(article.id!),
                             "dateRead": Timestamp.now(),
                           }
-                        ])
+                        ]),
                       });
                     } else {
                       List<dynamic> existingArticleIds = favoriteData
@@ -95,7 +94,7 @@ void showConfirmationBottomSheet(
                                   .doc(article.id!),
                               "dateRead": Timestamp.now(),
                             }
-                          ])
+                          ]),
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -108,7 +107,7 @@ void showConfirmationBottomSheet(
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                "This article is already in your favorites list!"),
+                                "This article is already in your favorites list!",),
                             duration: Duration(seconds: 2),
                           ),
                         );

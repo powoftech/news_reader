@@ -1,8 +1,8 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
-import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/screens/search_result.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
@@ -14,12 +14,13 @@ class SearchScreen extends StatelessWidget {
   final dynamic history;
   final dynamic favorite;
   final List<String>? uniqueTopics;
-  const SearchScreen(
-      {super.key,
-      required this.articles,
-      required this.history,
-      required this.favorite,
-      required this.uniqueTopics});
+  const SearchScreen({
+    super.key,
+    required this.articles,
+    required this.history,
+    required this.favorite,
+    required this.uniqueTopics,
+  });
   @override
   Widget build(BuildContext context) {
     List<String> tabs = uniqueTopics!;
@@ -44,7 +45,7 @@ class SearchScreen extends StatelessWidget {
                   tabs: tabs,
                   articles: articles,
                   favorite: favorite,
-                  history: history),
+                  history: history,),
             ],
           ),
         ),
@@ -106,14 +107,14 @@ class _CategoryNews extends StatelessWidget {
                     ),
                   ),
                 )
-                .toList()),
+                .toList(),),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.55,
           child: TabBarView(
             children: tabs.map((tab) {
               final filteredArticles = articles
                   .where(
-                      (article) => article.topic!.contains(tab.toLowerCase()))
+                      (article) => article.topic!.contains(tab.toLowerCase()),)
                   .toList();
               return ListView.builder(
                 shrinkWrap: true,
@@ -152,7 +153,7 @@ class _CategoryNews extends StatelessWidget {
                                   .doc(articles[index].id!),
                               "dateRead": Timestamp.now(),
                             }
-                          ])
+                          ]),
                         });
                       } else {
                         List<dynamic> existingArticleIds = historyData
@@ -171,7 +172,7 @@ class _CategoryNews extends StatelessWidget {
                                     .doc(articles[index].id!),
                                 "dateRead": Timestamp.now(),
                               }
-                            ])
+                            ]),
                           });
                         }
                       }
@@ -232,7 +233,7 @@ class _CategoryNews extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   );
@@ -267,7 +268,7 @@ class _DiscoverNews extends StatelessWidget {
               style: Provider.of<ThemeProvider>(context)
                   .getThemeData(context)
                   .textTheme
-                  .headlineLarge),
+                  .headlineLarge,),
           const SizedBox(
             height: 5,
           ),

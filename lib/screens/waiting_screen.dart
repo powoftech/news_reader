@@ -23,7 +23,7 @@ class WaitingScreen extends StatelessWidget {
                 child: CircularProgressIndicator(
                   // color: isDarkMode ? Colors.white : Colors.black,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      isDarkMode ? Colors.white : Colors.black),
+                      isDarkMode ? Colors.white : Colors.black,),
                   strokeWidth: 8.0,
                 ),
               ),

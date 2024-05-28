@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:news_reader/controllers/news.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/screens/view_all_screen.dart";
@@ -10,7 +11,7 @@ import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = "/";
   final List<Article> articles;
   late DocumentReference<Map<String, dynamic>> favorite;
@@ -24,26 +25,50 @@ class HomeScreen extends StatelessWidget {
   });
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Article> _articles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _articles = News.news;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ThemeData themeData =
         Provider.of<ThemeProvider>(context).getThemeData(context);
+    bool isDarkMode = themeData.brightness == Brightness.dark;
+
     return Scaffold(
       backgroundColor: themeData.colorScheme.surface,
       extendBodyBehindAppBar: true,
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          _NewsOfTheDay(
-            articles: articles,
-            history: history,
-            favorite: favorite,
-          ),
-          _BreakingNews(
-            articles: articles,
-            history: history,
-            favorite: favorite,
-          ),
-        ],
+      body: RefreshIndicator(
+        color: isDarkMode ? Colors.white : Colors.black,
+        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        onRefresh: () async {
+          await News().getNews();
+          setState(() {});
+          return Future<void>.delayed(const Duration(seconds: 2));
+        },
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            _NewsOfTheDay(
+              articles: _articles,
+              history: widget.history,
+              favorite: widget.favorite,
+            ),
+            _BreakingNews(
+              articles: _articles,
+              history: widget.history,
+              favorite: widget.favorite,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -62,7 +87,7 @@ class _BreakingNews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0),
       child: Column(
         children: [
           Row(
@@ -100,11 +125,11 @@ class _BreakingNews extends StatelessWidget {
           ),
           SizedBox(height: 10),
           SizedBox(
-            height: 350,
+            height: MediaQuery.of(context).size.height * 0.475,
             child: ListView.separated(
               scrollDirection: Axis.vertical,
               itemCount: 9,
-              separatorBuilder: (context, index) => SizedBox(height: 40),
+              separatorBuilder: (context, index) => SizedBox(height: 20),
               padding: EdgeInsets.symmetric(vertical: 8),
               itemBuilder: (context, index) {
                 return SizedBox(
@@ -117,7 +142,7 @@ class _BreakingNews extends StatelessWidget {
                           "article",
                           articles[index + 1].id!,
                           "view",
-                          int.parse(articles[index + 1].view!));
+                          int.parse(articles[index + 1].view!),);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -140,7 +165,7 @@ class _BreakingNews extends StatelessWidget {
                                   .doc(articles[index + 1].id!),
                               "dateRead": Timestamp.now(),
                             }
-                          ])
+                          ]),
                         });
                       } else {
                         List<dynamic> existingArticleIds = historyData
@@ -160,7 +185,7 @@ class _BreakingNews extends StatelessWidget {
                                     .doc(articles[index + 1].id!),
                                 "dateRead": Timestamp.now(),
                               }
-                            ])
+                            ]),
                           });
                         }
                       }
@@ -178,7 +203,7 @@ class _BreakingNews extends StatelessWidget {
                             style: Provider.of<ThemeProvider>(context)
                                 .getThemeData(context)
                                 .textTheme
-                                .bodyLarge!),
+                                .bodyLarge!,),
                         const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,7 +256,12 @@ class _NewsOfTheDay extends StatelessWidget {
       onTap: () async {
         articles[0].view = (int.parse(articles[0].view!) + 1).toString();
         await updateFieldInFirebase(
-            "article", articles[0].id!, "view", int.parse(articles[0].view!));
+            "article",
+            articles[0].id!,
+            "view",
+            int.parse(
+              articles[0].view!,
+            ),);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -253,7 +283,7 @@ class _NewsOfTheDay extends StatelessWidget {
                     .doc(articles[0].id!),
                 "dateRead": Timestamp.now(),
               }
-            ])
+            ]),
           });
         } else {
           List<dynamic> existingArticleIds = historyData
@@ -272,13 +302,13 @@ class _NewsOfTheDay extends StatelessWidget {
                       .doc(articles[0].id!),
                   "dateRead": Timestamp.now(),
                 }
-              ])
+              ]),
             });
           }
         }
       },
       child: ImageContainer(
-        height: MediaQuery.of(context).size.height * 0.45,
+        height: MediaQuery.of(context).size.height * 0.4,
         width: double.infinity,
         padding: const EdgeInsets.all(20.0),
         imageUrl: articles[0].urlToImage!,
@@ -287,7 +317,7 @@ class _NewsOfTheDay extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomTag(
-              backgroundColor: Colors.grey.withAlpha(150),
+              backgroundColor: Colors.grey.withAlpha(191),
               children: [
                 Text(
                   "News of the Day",
@@ -306,7 +336,16 @@ class _NewsOfTheDay extends StatelessWidget {
                   .getThemeData(context)
                   .textTheme
                   .displayLarge!
-                  .copyWith(color: Colors.white),
+                  .copyWith(
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: Color.fromARGB(191, 0, 0, 0),
+                    offset: Offset(1, 1),
+                    blurRadius: 3.0,
+                  ),
+                ],
+              ),
             ),
             TextButton(
               onPressed: () {},
@@ -319,10 +358,29 @@ class _NewsOfTheDay extends StatelessWidget {
                         .getThemeData(context)
                         .textTheme
                         .titleLarge!
-                        .copyWith(color: Colors.white),
+                        .copyWith(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Color.fromARGB(191, 0, 0, 0),
+                          offset: Offset(1, 1),
+                          blurRadius: 3.0,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  Icon(Icons.arrow_right_alt, color: Colors.white),
+                  Icon(
+                    Icons.arrow_right_alt,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromARGB(191, 0, 0, 0),
+                        offset: Offset(1, 1),
+                        blurRadius: 3.0,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

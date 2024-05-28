@@ -1,8 +1,8 @@
+import "dart:developer";
+
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/auth.dart";
-import "package:news_reader/screens/profile_screen.dart";
-import "package:news_reader/screens/setting_user_settings.dart";
-import "package:news_reader/screens/sign_in_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
@@ -17,9 +17,34 @@ class SettingScreenUser extends StatefulWidget {
 
 class _SettingScreenUserState extends State<SettingScreenUser> {
   int selectedButtonIndex = 0; // Default index of the selected button
+  // late Map<String, dynamic>? user;
 
   Future<void> signOut() async {
     await Auth().signOut();
+  }
+
+  Future<Map<String, dynamic>?> fetchUser() async {
+    final uid = Auth().currentUser?.uid;
+
+    final userDoc = FirebaseFirestore.instance.collection("user").doc(uid);
+    final snapshot = await userDoc.get();
+    final user = snapshot.data();
+    return user;
+  }
+
+  // Future<void> initializeDocument() async {
+  //   final uid = Auth().currentUser?.uid;
+
+  //   final userDoc = FirebaseFirestore.instance.collection("user").doc(uid);
+  //   final snapshot = await userDoc.get();
+  //   user = snapshot.data();
+  //   inspect(user);
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // initializeDocument();
   }
 
   SizedBox signOutButton(BuildContext context) {
@@ -58,167 +83,130 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Provider.of<ThemeProvider>(context)
-          .getThemeData(context)
-          .colorScheme
-          .surface,
-      extendBodyBehindAppBar: true,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+  FutureBuilder headPart(BuildContext context) {
+    return FutureBuilder(
+      future: fetchUser(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        var user = snapshot.data;
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            headPart(context),
-            languageChange(context),
-            SizedBox(height: 20),
-            Text(
-              "App version: 1.0.0",
+            SizedBox(
+              height: 60,
             ),
-            SizedBox(height: 10),
-            // Text(
-            //   'Bạn đã mở app này 2 lần',
-            // ),
-            // SizedBox(height: 20),
-            Info(context),
-            SizedBox(height: 40),
-            signOutButton(context)
+            Text(
+              user["username"],
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .displayMedium,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              user["email"],
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .titleLarge,
+            ),
+            Divider(
+              color: Provider.of<ThemeProvider>(context)
+                          .getThemeData(context)
+                          .colorScheme
+                          .brightness ==
+                      Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.person_outline,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    "Profile",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Row(
+                children: [
+                  Icon(Icons.bookmark_outline),
+                  SizedBox(width: 5),
+                  Text(
+                    "Bookmark",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              color: Provider.of<ThemeProvider>(context)
+                          .getThemeData(context)
+                          .colorScheme
+                          .brightness ==
+                      Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Row(
+                children: [
+                  Icon(Icons.settings_outlined),
+                  SizedBox(width: 5),
+                  Text(
+                    "Settings",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Select language",
+              style: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .textTheme
+                  .titleSmall,
+            ),
+            SizedBox(
+              height: 8,
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Column headPart(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 60,
-        ),
-        Text(
-          "User name",
-          style: Provider.of<ThemeProvider>(context)
-              .getThemeData(context)
-              .textTheme
-              .displayMedium,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          "User gmail",
-          style: Provider.of<ThemeProvider>(context)
-              .getThemeData(context)
-              .textTheme
-              .titleLarge,
-        ),
-        Divider(
-          color: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .colorScheme
-                      .brightness ==
-                  Brightness.light
-              ? Colors.black
-              : Colors.white,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        InkWell(
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ProfileScreen())),
-          child: Row(
-            children: [
-              Icon(
-                Icons.person_outline,
-              ),
-              SizedBox(width: 5),
-              Text(
-                "Profile",
-                style: Provider.of<ThemeProvider>(context)
-                    .getThemeData(context)
-                    .textTheme
-                    .titleLarge,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        InkWell(
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SignInScreen(
-                        email: "",
-                      ))),
-          child: Row(
-            children: [
-              Icon(Icons.bookmark_outline),
-              SizedBox(width: 5),
-              Text(
-                "Bookmark",
-                style: Provider.of<ThemeProvider>(context)
-                    .getThemeData(context)
-                    .textTheme
-                    .titleLarge,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Divider(
-          color: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .colorScheme
-                      .brightness ==
-                  Brightness.light
-              ? Colors.black
-              : Colors.white,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        InkWell(
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SettingScreenUserSettings())),
-          child: Row(
-            children: [
-              Icon(Icons.settings_outlined),
-              SizedBox(width: 5),
-              Text(
-                "Settings",
-                style: Provider.of<ThemeProvider>(context)
-                    .getThemeData(context)
-                    .textTheme
-                    .titleLarge,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          "Select language",
-          style: Provider.of<ThemeProvider>(context)
-              .getThemeData(context)
-              .textTheme
-              .titleSmall,
-        ),
-        SizedBox(
-          height: 8,
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -242,7 +230,8 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
                                 .brightness ==
                             Brightness.light
                         ? Colors.grey.withAlpha(
-                            70) // Unselected button color in light mode
+                            70,
+                          ) // Unselected button color in light mode
                         : Colors.white, // Unselected button color in dark mode
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -282,7 +271,8 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
                                 .brightness ==
                             Brightness.light
                         ? Colors.grey.withAlpha(
-                            70) // Unselected button color in light mode
+                            70,
+                          ) // Unselected button color in light mode
                         : Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -308,7 +298,7 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
     );
   }
 
-  GestureDetector Info(BuildContext context) {
+  GestureDetector info(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -363,6 +353,40 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
         "Delete my account",
         style: TextStyle(
           color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Provider.of<ThemeProvider>(context)
+          .getThemeData(context)
+          .colorScheme
+          .surface,
+      extendBodyBehindAppBar: true,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            headPart(context),
+            languageChange(context),
+            SizedBox(height: 20),
+            Text(
+              "App version: 1.0.0",
+            ),
+            SizedBox(height: 10),
+            // Text(
+            //   'Bạn đã mở app này 2 lần',
+            // ),
+            // SizedBox(height: 20),
+            info(context),
+            SizedBox(height: 40),
+            signOutButton(context),
+          ],
         ),
       ),
     );

@@ -1,7 +1,8 @@
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/models/article_model.dart";
 import "package:news_reader/controllers/news.dart";
+import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
@@ -26,7 +27,7 @@ class _AppScreenState extends State<AppScreen> {
   Future<void> _fetchNews() async {
     News newsService = News();
     await newsService.getNews();
-    articles = newsService.news;
+    articles = News.news;
     uniqueTopics = newsService.allTopics.toList();
     history = newsService.history;
     favorite = newsService.favorite;
