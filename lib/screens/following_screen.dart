@@ -105,7 +105,13 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                 return Container(
                   width: MediaQuery.of(context).size.width * 0.5,
                   margin: EdgeInsets.only(left: 20, right: 10),
-                  child: InkWell(
+                  child: GestureDetector(
+                    onLongPressStart: (_) => Provider.of<DeleteMode>(context,
+                            listen: false)
+                        .activateDeleteMode(), // Activate global delete mode
+                    onLongPressEnd: (_) => handleDeleteArticle(
+                        getArticleById(articles, favorite["article"].id),
+                        context), // Handle individual article deletion
                     onTap: () async {
                       getArticleById(articles, favorite[index]["article"].id)
                           .view = (int.parse(getArticleById(
@@ -170,6 +176,17 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (Provider.of<DeleteMode>(context)
+                            .isDeleteModeActive) // Show delete icon based on global state
+                          Positioned(
+                            bottom: 10,
+                            right: 10,
+                            child: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => handleDeleteArticle(
+                                  favorite[index]["article"], context),
+                            ),
+                          ),
                       ],
                     ),
                   ),
