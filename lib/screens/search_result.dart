@@ -1,3 +1,4 @@
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
@@ -20,6 +21,7 @@ class SearchArticleScreen extends StatelessWidget {
   final dynamic history;
   final dynamic favorite;
   final String keyword;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +49,7 @@ class SearchArticleScreen extends StatelessWidget {
                 itemCount: articles.length,
                 itemBuilder: ((context, index) {
                   final currentArticle = articles[index];
+
                   if (currentArticle.title!
                       .toLowerCase()
                       .contains(keyword.toLowerCase())) {
@@ -55,10 +58,11 @@ class SearchArticleScreen extends StatelessWidget {
                         currentArticle.view =
                             (int.parse(currentArticle.view!) + 1).toString();
                         await updateFieldInFirebase(
-                            "article",
-                            currentArticle.id!,
-                            "view",
-                            int.parse(currentArticle.view!),);
+                          "article",
+                          currentArticle.id!,
+                          "view",
+                          int.parse(currentArticle.view!),
+                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -115,13 +119,15 @@ class SearchArticleScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(currentArticle.title!,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.clip,
-                                      style: Provider.of<ThemeProvider>(context)
-                                          .getThemeData(context)
-                                          .textTheme
-                                          .bodyLarge!,),
+                                  Text(
+                                    currentArticle.title!,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.clip,
+                                    style: Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .textTheme
+                                        .bodyLarge!,
+                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -138,7 +144,8 @@ class SearchArticleScreen extends StatelessWidget {
                                         child: Text(
                                           "${currentArticle.publishedAt}",
                                           style: Provider.of<ThemeProvider>(
-                                                  context,)
+                                            context,
+                                          )
                                               .getThemeData(context)
                                               .textTheme
                                               .bodyMedium,
@@ -182,8 +189,9 @@ class SearchArticleScreen extends StatelessWidget {
                         ],
                       ),
                     );
+                  } else {
+                    return null;
                   }
-                  return null;
                 }),
               ),
             ),
