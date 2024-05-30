@@ -33,7 +33,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
-                .displayLarge),
+                .displayLarge,),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -64,7 +64,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  obscureText: _obscureText),
+                  obscureText: _obscureText,),
               SizedBox(height: 10),
               TextFormField(
                 controller: _controllerPassword,
@@ -125,7 +125,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                           .getThemeData(context)
                           .textTheme
                           .titleMedium,
-                    )
+                    ),
                   ],
                 ),
               ),

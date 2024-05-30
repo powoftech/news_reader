@@ -1,20 +1,20 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:flutter/rendering.dart";
+import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
-import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
 class SearchArticleScreen extends StatelessWidget {
-  const SearchArticleScreen(
-      {super.key,
-      required this.articles,
-      required this.favorite,
-      required this.history,
-      required this.keyword});
+  const SearchArticleScreen({
+    super.key,
+    required this.articles,
+    required this.favorite,
+    required this.history,
+    required this.keyword,
+  });
   static const routeName = "/search-result";
   final List<Article> articles;
   final dynamic history;
@@ -29,7 +29,7 @@ class SearchArticleScreen extends StatelessWidget {
           .surface,
       appBar: AppBar(
         title: Text(
-          "Result for '${keyword}'",
+          "Result for '$keyword'",
           style: Provider.of<ThemeProvider>(context)
               .getThemeData(context)
               .textTheme
@@ -58,7 +58,7 @@ class SearchArticleScreen extends StatelessWidget {
                             "article",
                             currentArticle.id!,
                             "view",
-                            int.parse(currentArticle.view!));
+                            int.parse(currentArticle.view!),);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -81,7 +81,7 @@ class SearchArticleScreen extends StatelessWidget {
                                     .doc(articles[index].id!),
                                 "dateRead": Timestamp.now(),
                               }
-                            ])
+                            ]),
                           });
                         } else {
                           List<dynamic> existingArticleIds = historyData
@@ -101,7 +101,7 @@ class SearchArticleScreen extends StatelessWidget {
                                       .doc(articles[index].id!),
                                   "dateRead": Timestamp.now(),
                                 }
-                              ])
+                              ]),
                             });
                           }
                         }
@@ -121,7 +121,7 @@ class SearchArticleScreen extends StatelessWidget {
                                       style: Provider.of<ThemeProvider>(context)
                                           .getThemeData(context)
                                           .textTheme
-                                          .bodyLarge!),
+                                          .bodyLarge!,),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -138,7 +138,7 @@ class SearchArticleScreen extends StatelessWidget {
                                         child: Text(
                                           "${currentArticle.publishedAt}",
                                           style: Provider.of<ThemeProvider>(
-                                                  context)
+                                                  context,)
                                               .getThemeData(context)
                                               .textTheme
                                               .bodyMedium,
@@ -186,7 +186,7 @@ class SearchArticleScreen extends StatelessWidget {
                   return null;
                 }),
               ),
-            )
+            ),
           ],
         ),
       ),

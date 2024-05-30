@@ -1,15 +1,16 @@
+import "dart:developer";
+
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:email_validator/email_validator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/auth.dart";
-import "package:news_reader/screens/sign_in_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = "/signup";
-  final String email;
-  const SignUpScreen({super.key, required this.email});
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -20,23 +21,63 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscureText = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  Future<void> createUserWithEmailAndPassword() async {
+  Future<bool> createUserWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
+      final userCollectionRef = FirebaseFirestore.instance.collection("user");
+      final querySnapshot = await userCollectionRef
+          .where(
+            "username",
+            isEqualTo: _controllerUsername.text,
+          )
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        throw Exception("The username is already in use by another account.");
+      }
+
+      String? uid = await Auth().createUserWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
+
+      final userDocumentRef = userCollectionRef.doc(uid);
+      await userDocumentRef.set({
+        "username": _controllerUsername.text,
+        "status":
+            FirebaseFirestore.instance.collection("userStatus").doc("active"),
+        "type": FirebaseFirestore.instance.collection("userType").doc("reader"),
+        "dateCreated": Timestamp.now(),
+        "lastActive": Timestamp.now(),
+        "email": _controllerEmail.text,
+      });
+
+      return true;
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message!),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } on Exception catch (e) {
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().split(":")[1]),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
+    return false;
   }
 
   @override
   void initState() {
     super.initState();
-    _controllerEmail.text = widget.email;
   }
 
   @override
@@ -47,18 +88,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text("Sign up",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge),
+        title: Text(
+          "Create new account",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: AutovalidateMode.disabled,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _controllerEmail,
                   validator: (value) => EmailValidator.validate(value!)
                       ? null
-                      : "This email is invalid.\nMake sure it's written like example@email.com",
+                      : "The email address is invalid.",
                   decoration: InputDecoration(
                     hintText: "Email",
                     filled: true,
@@ -88,6 +131,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 TextFormField(
+                  controller: _controllerUsername,
+                  validator: (value) {
+                    String pattern = r"^[a-zA-Z0-9_]+$";
+                    RegExp regex = RegExp(pattern);
+                    if (!regex.hasMatch(value!)) {
+                      return "The username must contain only\n\tletters,\n\tdigits,\n\tunderscores";
+                    } else {
+                      return null;
+                    }
+                  },
                   decoration: InputDecoration(
                     hintText: "Username",
                     filled: true,
@@ -107,6 +160,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 10),
                 TextFormField(
                   controller: _controllerPassword,
+                  validator: (value) {
+                    String error = "The password must contain at least";
+
+                    if (!RegExp(r"[a-zA-z]").hasMatch(value!)) {
+                      error += "\n\t1 letter,";
+                    }
+                    if (!RegExp(r"[0-9]").hasMatch(value)) {
+                      error += "\n\t1 number,";
+                    }
+                    if (value.length < 10) {
+                      error += "\n\t10 characters";
+                    }
+
+                    if (error == "The password must contain at least") {
+                      return null;
+                    } else {
+                      return error;
+                    }
+                  },
                   decoration: InputDecoration(
                     hintText: "Password",
                     filled: true,
@@ -160,9 +232,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      createUserWithEmailAndPassword();
+                      if (await createUserWithEmailAndPassword()) {
+                        log("Successfully!");
+                        Navigator.of(context).pop();
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -173,16 +248,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     minimumSize: Size(double.infinity, 0),
                   ),
-                  child: Text(
-                    "Sign up",
-                    style: Provider.of<ThemeProvider>(context)
-                        .getThemeData(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.login,
+                        color: Colors.white,
+                      ), // Add the icon
+                      SizedBox(width: 8),
+                      Text(
+                        "Sign up",
+                        style: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -190,14 +275,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignInScreen(
-                          email: _controllerEmail.text,
-                        ),
-                      ),
-                    );
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade200,

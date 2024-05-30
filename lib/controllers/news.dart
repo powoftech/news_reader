@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/controllers/date_formatter.dart";
@@ -12,22 +14,23 @@ List<dynamic> uppercaseFirstLetters(List<dynamic> list) {
 }
 
 class News {
-  List<Article> news = [];
-  final firestore = FirebaseFirestore.instance;
-  final dateFormatter = DateFormatter();
-  final allTopics = <String>{};
+  static List<Article> news = [];
+  Set<String> allTopics = {};
   late DocumentReference<Map<String, dynamic>> favorite;
   late DocumentReference<Map<String, dynamic>> history;
+
   Future<void> getNews() async {
     final uid = Auth().currentUser?.uid;
-    final user = firestore.collection("user").doc(uid);
-    final userhistory =
+    log(uid!);
+    final user = FirebaseFirestore.instance.collection("user").doc(uid);
+    final userHistory =
         FirebaseFirestore.instance.collection("history").doc(uid);
-    final userfavorite =
+    final userFavorite =
         FirebaseFirestore.instance.collection("readLater").doc(uid);
-    userhistory.get().then((docSnapshot) async {
+
+    userHistory.get().then((docSnapshot) async {
       if (!docSnapshot.exists) {
-        await userhistory.set({
+        await userHistory.set({
           "articles": {
             {
               "article": "",
@@ -38,9 +41,9 @@ class News {
         });
       }
     });
-    userfavorite.get().then((docSnapshot) async {
+    userFavorite.get().then((docSnapshot) async {
       if (!docSnapshot.exists) {
-        await userfavorite.set({
+        await userFavorite.set({
           "articles": {
             {
               "article": "",
@@ -51,7 +54,8 @@ class News {
         });
       }
     });
-    final articleRef = firestore
+
+    final articleRef = FirebaseFirestore.instance
         .collection("article")
         .orderBy("datePublished", descending: true)
         .limit(50);
@@ -81,13 +85,14 @@ class News {
             .map((item) => item.toString())
             .toList(),
       );
+
       // Add article to the list
       news.add(article);
       final articleTopics =
           uppercaseFirstLetters(data["topic"] as List<dynamic>);
       allTopics.addAll(articleTopics.expand((topic) => [topic]));
     }
-    favorite = userfavorite;
-    history = userhistory;
+    favorite = userFavorite;
+    history = userHistory;
   }
 }

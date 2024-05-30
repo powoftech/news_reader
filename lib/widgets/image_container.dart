@@ -10,6 +10,7 @@ class ImageContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.child,
+    this.opacity = 1.0,
   });
 
   final double width;
@@ -19,6 +20,8 @@ class ImageContainer extends StatelessWidget {
   final EdgeInsets? margin;
   final double borderRadius;
   final Widget? child;
+  final double opacity;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,6 +33,7 @@ class ImageContainer extends StatelessWidget {
         image: DecorationImage(
           image: NetworkImage(imageUrl),
           fit: BoxFit.cover,
+          opacity: opacity,
         ),
       ),
       child: child,

@@ -8,11 +8,12 @@ import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
 class ViewAllArticlesScreen extends StatelessWidget {
-  const ViewAllArticlesScreen(
-      {super.key,
-      required this.articles,
-      required this.favorite,
-      required this.history});
+  const ViewAllArticlesScreen({
+    super.key,
+    required this.articles,
+    required this.favorite,
+    required this.history,
+  });
   static const routeName = "/view";
   final List<Article> articles;
   final dynamic history;
@@ -46,8 +47,12 @@ class ViewAllArticlesScreen extends StatelessWidget {
                   onTap: () async {
                     articles[index].view =
                         (int.parse(articles[index].view!) + 1).toString();
-                    await updateFieldInFirebase("article", articles[index].id!,
-                        "view", int.parse(articles[index].view!));
+                    await updateFieldInFirebase(
+                      "article",
+                      articles[index].id!,
+                      "view",
+                      int.parse(articles[index].view!),
+                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -70,7 +75,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                 .doc(articles[index].id!),
                             "dateRead": Timestamp.now(),
                           }
-                        ])
+                        ]),
                       });
                     } else {
                       List<dynamic> existingArticleIds = historyData
@@ -89,7 +94,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   .doc(articles[index].id!),
                               "dateRead": Timestamp.now(),
                             }
-                          ])
+                          ]),
                         });
                       }
                     }
@@ -109,7 +114,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                                   style: Provider.of<ThemeProvider>(context)
                                       .getThemeData(context)
                                       .textTheme
-                                      .bodyLarge!),
+                                      .bodyLarge!,),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -170,7 +175,7 @@ class ViewAllArticlesScreen extends StatelessWidget {
                 );
               }),
             ),
-          )
+          ),
         ],
       ),
     );

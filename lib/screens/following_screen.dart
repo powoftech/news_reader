@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
@@ -9,11 +11,12 @@ import "package:provider/provider.dart";
 
 // ignore: must_be_immutable
 class FollowingScreen extends StatelessWidget {
-  FollowingScreen(
-      {super.key,
-      required this.favorite,
-      required this.history,
-      required this.articles});
+  FollowingScreen({
+    super.key,
+    required this.favorite,
+    required this.history,
+    required this.articles,
+  });
   DocumentReference<Map<String, dynamic>> favorite;
   DocumentReference<Map<String, dynamic>> history;
   final List<Article> articles;
@@ -22,32 +25,37 @@ class FollowingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([favorite.get(), history.get()]),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Show a loading spinner while waiting
-          } else if (snapshot.hasError) {
-            return Text(
-                "Error: ${snapshot.error}"); // Show error if there is any
-          } else {
-            dynamic favoriteData = snapshot.data![0].data();
-            dynamic historyData = snapshot.data![1].data();
-            final articlesFavorite = favoriteData["articles"];
-            final articlesHistory = historyData["articles"];
-            return _NotEmptyHistoryandFavorite(
-              favorite: articlesFavorite,
-              history: articlesHistory,
-              articles: articles,
-            );
-          }
-        });
+      future: Future.wait([favorite.get(), history.get()]),
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<List<DocumentSnapshot>> snapshot,
+      ) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show a loading spinner while waiting
+        } else if (snapshot.hasError) {
+          return Text(
+            "Error: ${snapshot.error}",
+          ); // Show error if there is any
+        } else {
+          dynamic favoriteData = snapshot.data![0].data();
+          dynamic historyData = snapshot.data![1].data();
+          final articlesFavorite = favoriteData["articles"];
+          final articlesHistory = historyData["articles"];
+
+          return _NotEmptyHistoryAndFavorite(
+            favorite: articlesFavorite,
+            history: articlesHistory,
+            articles: articles,
+          );
+        }
+      },
+    );
   }
 }
 
 // ignore: must_be_immutable
-class _NotEmptyHistoryandFavorite extends StatelessWidget {
-  _NotEmptyHistoryandFavorite({
+class _NotEmptyHistoryAndFavorite extends StatelessWidget {
+  _NotEmptyHistoryAndFavorite({
     required this.articles,
     required this.favorite,
     required this.history,
@@ -72,11 +80,13 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.favorite),
                 SizedBox(width: 10),
-                Text("Later Readings",
-                    style: Provider.of<ThemeProvider>(context)
-                        .getThemeData(context)
-                        .textTheme
-                        .displayLarge),
+                Text(
+                  "Later Readings",
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .displayLarge,
+                ),
               ],
             ),
           ),
@@ -91,14 +101,16 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               separatorBuilder: (context, index) => SizedBox(height: 30),
               itemBuilder: (context, index) {
                 if (favorite[index]["article"] == "") {
-                  return Container(
+                  return SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Center(
-                      child: Text("Empty",
-                          style: Provider.of<ThemeProvider>(context)
-                              .getThemeData(context)
-                              .textTheme
-                              .headlineSmall!),
+                      child: Text(
+                        "Empty",
+                        style: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .textTheme
+                            .headlineSmall!,
+                      ),
                     ),
                   );
                 }
@@ -113,29 +125,40 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                         getArticleById(articles, favorite["article"].id),
                         context), // Handle individual article deletion
                     onTap: () async {
-                      getArticleById(articles, favorite[index]["article"].id)
-                          .view = (int.parse(getArticleById(
-                                      articles, favorite[index]["article"].id)
-                                  .view!) +
-                              1)
-                          .toString();
+                      getArticleById(
+                        articles,
+                        favorite[index]["article"].id,
+                      ).view = (
+                        int.parse(
+                              getArticleById(
+                                articles,
+                                favorite[index]["article"].id,
+                              ).view!,
+                            ) +
+                            1,
+                      ).toString();
                       await updateFieldInFirebase(
-                          "article",
+                        "article",
+                        favorite[index]["article"].id,
+                        "view",
+                        int.parse(
                           getArticleById(
-                                  articles, favorite[index]["article"].id)
-                              .id!,
-                          "view",
-                          int.parse(getArticleById(
-                                  articles, favorite[index]["article"].id)
-                              .view!));
+                            articles,
+                            favorite[index]["article"].id,
+                          ).view!,
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ArticleScreen(
-                              article: getArticleById(
-                                  articles, favorite[index]["article"].id),
-                              history: history,
-                              favorite: favorite),
+                            article: getArticleById(
+                              articles,
+                              favorite[index]["article"].id,
+                            ),
+                            history: history,
+                            favorite: favorite,
+                          ),
                         ),
                       );
                     },
@@ -146,14 +169,16 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           height: 150,
                           width: MediaQuery.of(context).size.width,
                           imageUrl: getArticleById(
-                                  articles, favorite[index]["article"].id)
-                              .urlToImage!,
+                            articles,
+                            favorite[index]["article"].id,
+                          ).urlToImage!,
                         ),
                         const SizedBox(height: 10),
                         Text(
                           getArticleById(
-                                  articles, favorite[index]["article"].id)
-                              .title!,
+                            articles,
+                            favorite[index]["article"].id,
+                          ).title!,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
@@ -164,12 +189,18 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${getArticleById(articles, favorite[index]["article"].id).publishedAt} hours ago",
+                              "${getArticleById(
+                                articles,
+                                favorite[index]["article"].id,
+                              ).publishedAt} hours ago",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             Flexible(
                               child: Text(
-                                " by ${getArticleById(articles, favorite[index]["article"].id).author}",
+                                " by ${getArticleById(
+                                  articles,
+                                  favorite[index]["article"].id,
+                                ).author}",
                                 style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -200,11 +231,13 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               children: [
                 Icon(Icons.history),
                 SizedBox(width: 10),
-                Text("History",
-                    style: Provider.of<ThemeProvider>(context)
-                        .getThemeData(context)
-                        .textTheme
-                        .displayLarge),
+                Text(
+                  "History",
+                  style: Provider.of<ThemeProvider>(context)
+                      .getThemeData(context)
+                      .textTheme
+                      .displayLarge,
+                ),
               ],
             ),
           ),
@@ -219,14 +252,16 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
               separatorBuilder: (context, index) => SizedBox(height: 20),
               itemBuilder: (context, index) {
                 if (history[index]["article"] == "") {
-                  return Container(
+                  return SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Center(
-                      child: Text("Empty",
-                          style: Provider.of<ThemeProvider>(context)
-                              .getThemeData(context)
-                              .textTheme
-                              .headlineSmall!),
+                      child: Text(
+                        "Empty",
+                        style: Provider.of<ThemeProvider>(context)
+                            .getThemeData(context)
+                            .textTheme
+                            .headlineSmall!,
+                      ),
                     ),
                   );
                 }
@@ -236,27 +271,37 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                   child: InkWell(
                     onTap: () async {
                       getArticleById(articles, history[index]["article"].id)
-                          .view = (int.parse(getArticleById(
-                                      articles, history[index]["article"].id)
-                                  .view!) +
+                          .view = (int.parse(
+                                getArticleById(
+                                  articles,
+                                  history[index]["article"].id,
+                                ).view!,
+                              ) +
                               1)
                           .toString();
                       await updateFieldInFirebase(
-                          "article",
-                          getArticleById(articles, history[index]["article"].id)
-                              .id!,
-                          "view",
-                          int.parse(getArticleById(
-                                  articles, history[index]["article"].id)
-                              .view!));
+                        "article",
+                        getArticleById(articles, history[index]["article"].id)
+                            .id!,
+                        "view",
+                        int.parse(
+                          getArticleById(
+                            articles,
+                            history[index]["article"].id,
+                          ).view!,
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ArticleScreen(
-                              article: getArticleById(
-                                  articles, history[index]["article"].id),
-                              history: history,
-                              favorite: favorite),
+                            article: getArticleById(
+                              articles,
+                              history[index]["article"].id,
+                            ),
+                            history: history,
+                            favorite: favorite,
+                          ),
                         ),
                       );
                     },
@@ -267,8 +312,9 @@ class _NotEmptyHistoryandFavorite extends StatelessWidget {
                           height: 150,
                           width: MediaQuery.of(context).size.width,
                           imageUrl: getArticleById(
-                                  articles, history[index]["article"].id)
-                              .urlToImage!,
+                            articles,
+                            history[index]["article"].id,
+                          ).urlToImage!,
                         ),
                         const SizedBox(height: 10),
                         Text(

@@ -11,9 +11,6 @@ class AuthenticationScreen extends StatefulWidget {
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
   Widget build(BuildContext context) {
-    // ThemeData themeData = ThemeProvider().getThemeData(context);
-    // bool isDarkMode = themeData.brightness == Brightness.dark;
-
-    return SignInScreen(email: "");
+    return SignInScreen();
   }
 }

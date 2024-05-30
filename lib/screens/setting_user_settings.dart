@@ -19,7 +19,7 @@ class SettingScreenUserSettings extends StatelessWidget {
             style: Provider.of<ThemeProvider>(context)
                 .getThemeData(context)
                 .textTheme
-                .displayLarge),
+                .displayLarge,),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -30,7 +30,7 @@ class SettingScreenUserSettings extends StatelessWidget {
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ChangePasswordScreen())),
+                      builder: (context) => ChangePasswordScreen(),),),
               child: Row(
                 children: [
                   Icon(Icons.password_outlined),
@@ -52,7 +52,7 @@ class SettingScreenUserSettings extends StatelessWidget {
                             .brightness ==
                         Brightness.light
                     ? Colors.black
-                    : Colors.white),
+                    : Colors.white,),
           ],
         ),
       ),

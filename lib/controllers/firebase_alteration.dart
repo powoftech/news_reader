@@ -4,11 +4,15 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
 
-Future<void> updateFieldInFirebase(String enitty, String documentId,
-    String fieldName, dynamic newValue) async {
+Future<void> updateFieldInFirebase(
+  String entity,
+  String documentId,
+  String fieldName,
+  dynamic newValue,
+) async {
   try {
     final docRef =
-        FirebaseFirestore.instance.collection(enitty).doc(documentId);
+        FirebaseFirestore.instance.collection(entity).doc(documentId);
     await docRef.update({
       fieldName: newValue, // Specify the field name and new value
     });

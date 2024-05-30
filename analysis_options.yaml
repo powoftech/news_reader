@@ -30,5 +30,6 @@ linter:
     unnecessary_breaks: true
     use_key_in_widget_constructors: false
     prefer_double_quotes: true
+    require_trailing_commas: true
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

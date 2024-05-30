@@ -1,4 +1,6 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/screens/sign_in_screen.dart";
 import "package:news_reader/widgets/theme_provider.dart";
 import "package:provider/provider.dart";
@@ -19,13 +21,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TextEditingController();
   final TextEditingController _controllerDisplayLastName =
       TextEditingController();
-      
-      
+
   @override
   void initState() {
     super.initState();
     _controllerDisplayName.value = TextEditingValue(
-      text: "User name",
+      text: "",
     );
     _controllerDisplayFirstName.value = TextEditingValue(
       text: "User first name",
@@ -44,11 +45,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .surface,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text("Preferences",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge),
+        title: Text(
+          "Preferences",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -58,11 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: 110),
-              Text("Display name",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .titleSmall),
+              Text(
+                "Display name",
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .titleSmall,
+              ),
               TextFormField(
                 controller: _controllerDisplayName,
                 style: Provider.of<ThemeProvider>(context)
@@ -88,11 +93,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 height: 10,
               ),
-              Text("First name",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .titleSmall),
+              Text(
+                "First name",
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .titleSmall,
+              ),
               TextFormField(
                 controller: _controllerDisplayFirstName,
                 style: Provider.of<ThemeProvider>(context)
@@ -118,11 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 height: 10,
               ),
-              Text("Last name",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .titleSmall),
+              Text(
+                "Last name",
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .titleSmall,
+              ),
               TextFormField(
                 controller: _controllerDisplayLastName,
                 style: Provider.of<ThemeProvider>(context)
@@ -176,7 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .brightness ==
                                       Brightness.light
                                   ? Colors.grey.withAlpha(
-                                      70) // Unselected button color in light mode
+                                      70,
+                                    ) // Unselected button color in light mode
                                   : Colors
                                       .white, // Unselected button color in dark mode
                           elevation: 0,
@@ -218,7 +228,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .brightness ==
                                       Brightness.light
                                   ? Colors.grey.withAlpha(
-                                      70) // Unselected button color in light mode
+                                      70,
+                                    ) // Unselected button color in light mode
                                   : Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -263,11 +274,7 @@ class _SaveProfileButton extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => SignInScreen(
-                email: "",
-              ),
-            ),
+            MaterialPageRoute(builder: (context) => SignInScreen()),
           );
         },
         style: ElevatedButton.styleFrom(
