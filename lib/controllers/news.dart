@@ -55,10 +55,11 @@ class News {
       }
     });
 
-    final articleRef = FirebaseFirestore.instance
-        .collection("article")
-        .orderBy("datePublished", descending: true)
-        .limit(50);
+    final articleRef = FirebaseFirestore.instance.collection("article").orderBy(
+          "datePublished",
+          descending: true,
+        );
+
     final querySnapshot = await articleRef.get();
 
     for (var doc in querySnapshot.docs) {
