@@ -1,4 +1,3 @@
-
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/news.dart";
@@ -21,6 +20,7 @@ class _AppScreenState extends State<AppScreen> {
   List<Article> articles = [];
   late DocumentReference<Map<String, dynamic>> favorite;
   late DocumentReference<Map<String, dynamic>> history;
+  late Query<Map<String, dynamic>> FBArticles;
   List<Widget>? pages;
   List<String>? uniqueTopics;
   String user = "";
@@ -31,6 +31,7 @@ class _AppScreenState extends State<AppScreen> {
     uniqueTopics = newsService.allTopics.toList();
     history = newsService.history;
     favorite = newsService.favorite;
+    FBArticles = newsService.article;
   }
 
   @override
@@ -54,7 +55,7 @@ class _AppScreenState extends State<AppScreen> {
             key: PageStorageKey<String>("SearchScreen"),
           ),
           FollowingScreen(
-            articles: articles,
+            articles: FBArticles,
             favorite: favorite,
             history: history,
             key: PageStorageKey<String>("FollowingScreen"),

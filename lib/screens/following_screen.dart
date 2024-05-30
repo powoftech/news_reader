@@ -19,16 +19,21 @@ class FollowingScreen extends StatelessWidget {
   });
   DocumentReference<Map<String, dynamic>> favorite;
   DocumentReference<Map<String, dynamic>> history;
-  final List<Article> articles;
+  Query<Map<String, dynamic>> articles;
   static const routeName = "/following";
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([favorite.get(), history.get()]),
+      future: Future.wait([
+        favorite.get(),
+        history.get(),
+        articles.get(),
+      ]),
       builder: (
         BuildContext context,
-        AsyncSnapshot<List<DocumentSnapshot>> snapshot,
+        AsyncSnapshot<List<Object?>>
+            snapshot, // Update the type of the snapshot parameter
       ) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show a loading spinner while waiting
@@ -37,11 +42,11 @@ class FollowingScreen extends StatelessWidget {
             "Error: ${snapshot.error}",
           ); // Show error if there is any
         } else {
-          dynamic favoriteData = snapshot.data![0].data();
-          dynamic historyData = snapshot.data![1].data();
+          dynamic favoriteData = (snapshot.data![0] as DocumentSnapshot).data();
+          dynamic historyData = (snapshot.data![1] as DocumentSnapshot).data();
+          dynamic articles = (snapshot.data![2] as QuerySnapshot).docs;
           final articlesFavorite = favoriteData["articles"];
           final articlesHistory = historyData["articles"];
-
           return _NotEmptyHistoryAndFavorite(
             favorite: articlesFavorite,
             history: articlesHistory,
@@ -60,7 +65,7 @@ class _NotEmptyHistoryAndFavorite extends StatelessWidget {
     required this.favorite,
     required this.history,
   });
-  final List<Article> articles;
+  final articles;
   final favorite;
   final history;
 

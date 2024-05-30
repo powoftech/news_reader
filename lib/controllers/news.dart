@@ -18,7 +18,7 @@ class News {
   Set<String> allTopics = {};
   late DocumentReference<Map<String, dynamic>> favorite;
   late DocumentReference<Map<String, dynamic>> history;
-
+  late Query<Map<String, dynamic>> article;
   Future<void> getNews() async {
     final uid = Auth().currentUser?.uid;
     log(uid!);
@@ -94,5 +94,6 @@ class News {
     }
     favorite = userFavorite;
     history = userHistory;
+    article = articleRef;
   }
 }

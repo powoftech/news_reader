@@ -38,6 +38,6 @@ Future<void> deleteArticlesFromFirebase(String articleId) async {
   await batch.commit();
 }
 
-Article getArticleById(List<Article> articles, String id) {
+Article getArticleById(dynamic articles, String id) {
   return articles.firstWhere((article) => article.id == id);
 }
