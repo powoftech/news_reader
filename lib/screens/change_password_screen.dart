@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -29,11 +29,13 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text("Change Password",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge,),
+        title: Text(
+          "Change Password",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -45,26 +47,27 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                  controller: _controllerEmail,
-                  // validator: (value) => EmailValidator.validate(value!)
-                  //     ? null
-                  //     : "Please enter a valid email",
-                  decoration: InputDecoration(
-                    hintText: "Current password",
-                    filled: true,
-                    fillColor: Provider.of<ThemeProvider>(context)
-                                .getThemeData(context)
-                                .colorScheme
-                                .brightness ==
-                            Brightness.light
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade800,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide.none,
-                    ),
+                controller: _controllerEmail,
+                // validator: (value) => EmailValidator.validate(value!)
+                //     ? null
+                //     : "Please enter a valid email",
+                decoration: InputDecoration(
+                  hintText: "Current password",
+                  filled: true,
+                  fillColor: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .colorScheme
+                              .brightness ==
+                          Brightness.light
+                      ? Colors.grey.shade200
+                      : Colors.grey.shade800,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide.none,
                   ),
-                  obscureText: _obscureText,),
+                ),
+                obscureText: _obscureText,
+              ),
               SizedBox(height: 10),
               TextFormField(
                 controller: _controllerPassword,

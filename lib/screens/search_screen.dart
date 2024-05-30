@@ -5,7 +5,7 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/screens/search_result.dart";
 import "package:news_reader/widgets/image_container.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class SearchScreen extends StatelessWidget {
@@ -42,10 +42,11 @@ class SearchScreen extends StatelessWidget {
                 favorite: favorite,
               ),
               _CategoryNews(
-                  tabs: tabs,
-                  articles: articles,
-                  favorite: favorite,
-                  history: history,),
+                tabs: tabs,
+                articles: articles,
+                favorite: favorite,
+                history: history,
+              ),
             ],
           ),
         ),
@@ -92,29 +93,31 @@ class _CategoryNews extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TabBar(
-            tabAlignment: TabAlignment.start,
-            isScrollable: true,
-            indicatorColor: Colors.black,
-            tabs: tabs
-                .map(
-                  (tab) => Tab(
-                    icon: Text(
-                      tab,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
+          tabAlignment: TabAlignment.start,
+          isScrollable: true,
+          indicatorColor: Colors.black,
+          tabs: tabs
+              .map(
+                (tab) => Tab(
+                  icon: Text(
+                    tab,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
-                )
-                .toList(),),
+                ),
+              )
+              .toList(),
+        ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.55,
           child: TabBarView(
             children: tabs.map((tab) {
               final filteredArticles = articles
                   .where(
-                      (article) => article.topic!.contains(tab.toLowerCase()),)
+                    (article) => article.topic!.contains(tab.toLowerCase()),
+                  )
                   .toList();
               return ListView.builder(
                 shrinkWrap: true,
@@ -264,11 +267,13 @@ class _DiscoverNews extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Discover",
-              style: Provider.of<ThemeProvider>(context)
-                  .getThemeData(context)
-                  .textTheme
-                  .headlineLarge,),
+          Text(
+            "Discover",
+            style: Provider.of<ThemeProvider>(context)
+                .getThemeData(context)
+                .textTheme
+                .headlineLarge,
+          ),
           const SizedBox(
             height: 5,
           ),

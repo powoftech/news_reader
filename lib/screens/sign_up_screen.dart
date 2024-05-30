@@ -5,7 +5,7 @@ import "package:email_validator/email_validator.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/auth.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class SignUpScreen extends StatefulWidget {

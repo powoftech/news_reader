@@ -139,7 +139,7 @@ class ThemeProvider extends ChangeNotifier implements DataProvider {
   );
 }
 
-class DeleteMode with ChangeNotifier {
+class DeleteModeProvider extends ChangeNotifier implements DataProvider {
   bool _isDeleteModeActive = false;
 
   bool get isDeleteModeActive => _isDeleteModeActive;

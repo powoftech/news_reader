@@ -1,8 +1,7 @@
-
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/auth.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class SettingScreenUser extends StatefulWidget {
@@ -107,7 +106,7 @@ class _SettingScreenUserState extends State<SettingScreenUser> {
                 style: Provider.of<ThemeProvider>(context)
                     .getThemeData(context)
                     .textTheme
-                    .displayMedium, 
+                    .displayMedium,
               ),
               SizedBox(
                 height: 10,

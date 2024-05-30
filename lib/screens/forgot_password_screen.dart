@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -14,11 +14,13 @@ class ForgotPasswordScreen extends StatelessWidget {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text("Reset your password",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge,),
+        title: Text(
+          "Reset your password",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

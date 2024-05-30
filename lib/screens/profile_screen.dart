@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:news_reader/screens/sign_in_screen.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class ProfileScreen extends StatefulWidget {

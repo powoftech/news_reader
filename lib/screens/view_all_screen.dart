@@ -4,7 +4,7 @@ import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class ViewAllArticlesScreen extends StatelessWidget {
@@ -108,13 +108,15 @@ class ViewAllArticlesScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(articles[index].title!,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.clip,
-                                  style: Provider.of<ThemeProvider>(context)
-                                      .getThemeData(context)
-                                      .textTheme
-                                      .bodyLarge!,),
+                              Text(
+                                articles[index].title!,
+                                maxLines: 4,
+                                overflow: TextOverflow.clip,
+                                style: Provider.of<ThemeProvider>(context)
+                                    .getThemeData(context)
+                                    .textTheme
+                                    .bodyLarge!,
+                              ),
                               const SizedBox(
                                 height: 10,
                               ),

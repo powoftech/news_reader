@@ -7,7 +7,7 @@ import "package:news_reader/screens/view_all_screen.dart";
 import "package:news_reader/widgets/custom_tag.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/widgets/image_container.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 // ignore: must_be_immutable
@@ -139,10 +139,11 @@ class _BreakingNews extends StatelessWidget {
                       articles[index + 1].view =
                           (int.parse(articles[index + 1].view!) + 1).toString();
                       await updateFieldInFirebase(
-                          "article",
-                          articles[index + 1].id!,
-                          "view",
-                          int.parse(articles[index + 1].view!),);
+                        "article",
+                        articles[index + 1].id!,
+                        "view",
+                        int.parse(articles[index + 1].view!),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -199,11 +200,13 @@ class _BreakingNews extends StatelessWidget {
                           imageUrl: articles[index + 1].urlToImage!,
                         ),
                         const SizedBox(height: 10),
-                        Text(articles[index + 1].title!,
-                            style: Provider.of<ThemeProvider>(context)
-                                .getThemeData(context)
-                                .textTheme
-                                .bodyLarge!,),
+                        Text(
+                          articles[index + 1].title!,
+                          style: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .textTheme
+                              .bodyLarge!,
+                        ),
                         const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,12 +259,13 @@ class _NewsOfTheDay extends StatelessWidget {
       onTap: () async {
         articles[0].view = (int.parse(articles[0].view!) + 1).toString();
         await updateFieldInFirebase(
-            "article",
-            articles[0].id!,
-            "view",
-            int.parse(
-              articles[0].view!,
-            ),);
+          "article",
+          articles[0].id!,
+          "view",
+          int.parse(
+            articles[0].view!,
+          ),
+        );
         Navigator.push(
           context,
           MaterialPageRoute(

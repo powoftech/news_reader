@@ -1,14 +1,17 @@
+import "dart:ffi";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:news_reader/controllers/date_formatter.dart";
 import "package:news_reader/controllers/firebase_alteration.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/article_screen.dart";
 import "package:news_reader/widgets/image_container.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 // ignore: must_be_immutable
-class FollowingScreen extends StatelessWidget {
+class FollowingScreen extends StatefulWidget {
   FollowingScreen({
     super.key,
     required this.favorite,
@@ -21,12 +24,21 @@ class FollowingScreen extends StatelessWidget {
   static const routeName = "/following";
 
   @override
+  State<FollowingScreen> createState() => _FollowingScreenState();
+}
+
+class _FollowingScreenState extends State<FollowingScreen> {
+  void updateUI() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait([
-        favorite.get(),
-        history.get(),
-        articles.get(),
+        widget.favorite.get(),
+        widget.history.get(),
+        widget.articles.get(),
       ]),
       builder: (
         BuildContext context,
@@ -49,6 +61,7 @@ class FollowingScreen extends StatelessWidget {
             favorite: articlesFavorite,
             history: articlesHistory,
             articles: articles,
+            updateUI: updateUI,
           );
         }
       },
@@ -57,15 +70,27 @@ class FollowingScreen extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class _NotEmptyHistoryAndFavorite extends StatelessWidget {
+class _NotEmptyHistoryAndFavorite extends StatefulWidget {
   _NotEmptyHistoryAndFavorite({
     required this.articles,
     required this.favorite,
     required this.history,
+    required this.updateUI,
   });
   final articles;
   final favorite;
   final history;
+  final VoidCallback updateUI;
+
+  @override
+  State<_NotEmptyHistoryAndFavorite> createState() =>
+      _NotEmptyHistoryAndFavoriteState();
+}
+
+class _NotEmptyHistoryAndFavoriteState
+    extends State<_NotEmptyHistoryAndFavorite> {
+  final List<int> selectedFavoriteArticles = [];
+  final List<int> selectedHistoryArticles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -75,284 +100,362 @@ class _NotEmptyHistoryAndFavorite extends StatelessWidget {
           .colorScheme
           .surface,
       extendBodyBehindAppBar: true,
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 100, left: 20),
-            child: Row(
-              children: [
-                Icon(Icons.favorite),
-                SizedBox(width: 10),
-                Text(
-                  "Later Readings",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .displayLarge,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            if (Provider.of<DeleteModeProvider>(context)
+                .isDeleteModeActive) // Show delete icon based on global state
+              Container(
+                margin: EdgeInsets.only(top: 70),
+                child: InkWell(
+                  onTap: () async {
+                    for (var index in selectedFavoriteArticles) {
+                      handleDeleteArticle(
+                        context,
+                        "favorite",
+                        widget.history,
+                        widget.favorite,
+                        index,
+                      );
+                    }
+                    for (var index in selectedHistoryArticles) {
+                      handleDeleteArticle(
+                        context,
+                        "history",
+                        widget.history,
+                        widget.favorite,
+                        index,
+                      );
+                    }
+                    Provider.of<DeleteModeProvider>(
+                      context,
+                      listen: false,
+                    ).deactivateDeleteMode();
+                    selectedFavoriteArticles.clear();
+                    selectedHistoryArticles.clear();
+                    widget.updateUI();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                          "Delete (${selectedFavoriteArticles.length + selectedHistoryArticles.length})",
+                          style: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                color: Colors.red,
+                              )),
+                      Icon(Icons.delete, color: Colors.red),
+                    ],
+                  ),
                 ),
-              ],
+              ),
+            if (!Provider.of<DeleteModeProvider>(context).isDeleteModeActive)
+              SizedBox(height: 90),
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Row(
+                children: [
+                  Icon(Icons.favorite),
+                  SizedBox(width: 10),
+                  Text(
+                    "Later Readings",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .displayLarge,
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 300,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: favorite.length,
-              separatorBuilder: (context, index) => SizedBox(height: 30),
-              itemBuilder: (context, index) {
-                if (favorite[index]["article"] == "") {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(
-                        "Empty",
-                        style: Provider.of<ThemeProvider>(context)
-                            .getThemeData(context)
-                            .textTheme
-                            .headlineSmall!,
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 300,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.favorite.length,
+                separatorBuilder: (context, index) => SizedBox(height: 30),
+                itemBuilder: (context, index) {
+                  if (widget.favorite[index]["article"] == "") {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Empty",
+                          style: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
+                              .textTheme
+                              .headlineSmall!,
+                        ),
+                      ),
+                    );
+                  }
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    margin: EdgeInsets.only(left: 20, right: 10),
+                    child: GestureDetector(
+                      onLongPressStart: (_) => Provider.of<DeleteModeProvider>(
+                        context,
+                        listen: false,
+                      ).activateDeleteMode(), // Activate global delete mode
+
+                      // Handle individual article deletion
+                      onTap: () async {
+                        await updateFieldInFirebase(
+                          "article",
+                          widget.favorite[index]["article"].id,
+                          "view",
+                          getArticleById(
+                                widget.articles,
+                                widget.favorite[index]["article"].id,
+                              )["view"] +
+                              1,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticleScreen(
+                              article: getArticleById(
+                                widget.articles,
+                                widget.favorite[index]["article"].id,
+                              ),
+                              history: widget.history,
+                              favorite: widget.favorite,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (Provider.of<DeleteModeProvider>(context)
+                              .isDeleteModeActive)
+                            // Show checkbox only in delete mode
+                            Container(
+                              alignment: Alignment.topRight,
+                              padding: EdgeInsets.only(right: 10),
+                              child: Checkbox(
+                                value: selectedFavoriteArticles.contains(
+                                  index,
+                                ),
+                                onChanged: (value) => setState(() {
+                                  if (value!) {
+                                    selectedFavoriteArticles.add(index);
+                                  } else {
+                                    selectedFavoriteArticles.remove(index);
+                                  }
+                                }),
+                              ),
+                            ),
+                          ImageContainer(
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            imageUrl: getArticleById(
+                              widget.articles,
+                              widget.favorite[index]["article"].id,
+                            )["image"],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            getArticleById(
+                              widget.articles,
+                              widget.favorite[index]["article"].id,
+                            )["title"],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                DateFormatter().formattedDate(
+                                  getArticleById(
+                                    widget.articles,
+                                    widget.history[index]["article"].id,
+                                  )["datePublished"]
+                                      .toDate(),
+                                ),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  " by ${List<String>.from(getArticleById(
+                                    widget.articles,
+                                    widget.favorite[index]["article"].id,
+                                  )["author"]).map((e) => e.toString()).toList().join(", ")}",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   );
-                }
-                return Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  margin: EdgeInsets.only(left: 20, right: 10),
-                  child: GestureDetector(
-                    onLongPressStart: (_) => Provider.of<DeleteMode>(context,
-                            listen: false)
-                        .activateDeleteMode(), // Activate global delete mode
-                    onLongPressEnd: (_) => handleDeleteArticle(
-                        getArticleById(articles, favorite["article"].id),
-                        context), // Handle individual article deletion
-                    onTap: () async {
-                      getArticleById(
-                        articles,
-                        favorite[index]["article"].id,
-                      ).view = (
-                        int.parse(
-                              getArticleById(
-                                articles,
-                                favorite[index]["article"].id,
-                              ).view!,
-                            ) +
-                            1,
-                      ).toString();
-                      await updateFieldInFirebase(
-                        "article",
-                        favorite[index]["article"].id,
-                        "view",
-                        int.parse(
-                          getArticleById(
-                            articles,
-                            favorite[index]["article"].id,
-                          ).view!,
-                        ),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArticleScreen(
-                            article: getArticleById(
-                              articles,
-                              favorite[index]["article"].id,
-                            ),
-                            history: history,
-                            favorite: favorite,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ImageContainer(
-                          height: 150,
-                          width: MediaQuery.of(context).size.width,
-                          imageUrl: getArticleById(
-                            articles,
-                            favorite[index]["article"].id,
-                          ).urlToImage!,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          getArticleById(
-                            articles,
-                            favorite[index]["article"].id,
-                          ).title!,
-                          style: Theme.of(context)
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 40),
+              child: Row(
+                children: [
+                  Icon(Icons.history),
+                  SizedBox(width: 10),
+                  Text(
+                    "History",
+                    style: Provider.of<ThemeProvider>(context)
+                        .getThemeData(context)
+                        .textTheme
+                        .displayLarge,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 300,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.history.length,
+                separatorBuilder: (context, index) => SizedBox(height: 20),
+                itemBuilder: (context, index) {
+                  if (widget.history[index]["article"] == "") {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Text(
+                          "Empty",
+                          style: Provider.of<ThemeProvider>(context)
+                              .getThemeData(context)
                               .textTheme
-                              .bodyMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
+                              .headlineSmall!,
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${getArticleById(
-                                articles,
-                                favorite[index]["article"].id,
-                              ).publishedAt} hours ago",
-                              style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    );
+                  }
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    margin: EdgeInsets.only(right: 10, left: 20),
+                    child: GestureDetector(
+                      onLongPressStart: (_) => Provider.of<DeleteModeProvider>(
+                        context,
+                        listen: false,
+                      ).activateDeleteMode(), // Activate global delete mode
+
+                      onTap: () async {
+                        await updateFieldInFirebase(
+                          "article",
+                          getArticleById(widget.articles,
+                                  widget.history[index]["article"].id)
+                              .id!,
+                          "view",
+                          getArticleById(
+                                widget.articles,
+                                widget.history[index]["article"].id,
+                              )["view"] +
+                              1,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ArticleScreen(
+                              article: getArticleById(
+                                widget.articles,
+                                widget.history[index]["article"].id,
+                              ),
+                              history: widget.history,
+                              favorite: widget.favorite,
                             ),
-                            Flexible(
-                              child: Text(
-                                " by ${getArticleById(
-                                  articles,
-                                  favorite[index]["article"].id,
-                                ).author}",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (Provider.of<DeleteModeProvider>(context)
+                              .isDeleteModeActive)
+                            // Show checkbox only in delete mode
+                            Container(
+                              alignment: Alignment.topRight,
+                              padding: EdgeInsets.only(right: 10),
+                              child: Checkbox(
+                                value: selectedHistoryArticles.contains(index),
+                                onChanged: (value) => setState(() {
+                                  if (value!) {
+                                    selectedHistoryArticles.add(
+                                      index,
+                                    );
+                                  } else {
+                                    selectedHistoryArticles.remove(
+                                      index,
+                                    );
+                                  }
+                                }),
                               ),
                             ),
-                          ],
-                        ),
-                        if (Provider.of<DeleteMode>(context)
-                            .isDeleteModeActive) // Show delete icon based on global state
-                          Positioned(
-                            bottom: 10,
-                            right: 10,
-                            child: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => handleDeleteArticle(
-                                  favorite[index]["article"], context),
-                            ),
+                          ImageContainer(
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            imageUrl: getArticleById(
+                              widget.articles,
+                              widget.history[index]["article"].id,
+                            )["image"],
                           ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Row(
-              children: [
-                Icon(Icons.history),
-                SizedBox(width: 10),
-                Text(
-                  "History",
-                  style: Provider.of<ThemeProvider>(context)
-                      .getThemeData(context)
-                      .textTheme
-                      .displayLarge,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 300,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: history.length,
-              separatorBuilder: (context, index) => SizedBox(height: 20),
-              itemBuilder: (context, index) {
-                if (history[index]["article"] == "") {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(
-                        "Empty",
-                        style: Provider.of<ThemeProvider>(context)
-                            .getThemeData(context)
-                            .textTheme
-                            .headlineSmall!,
+                          const SizedBox(height: 10),
+                          Text(
+                            getArticleById(widget.articles,
+                                widget.history[index]["article"].id)["title"],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                DateFormatter().formattedDate(
+                                  getArticleById(
+                                    widget.articles,
+                                    widget.history[index]["article"].id,
+                                  )["datePublished"]
+                                      .toDate(),
+                                ),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  " by ${List<String>.from(getArticleById(
+                                    widget.articles,
+                                    widget.history[index]["article"].id,
+                                  )["author"]).map((e) => e.toString()).toList().join(", ")}",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   );
-                }
-                return Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  margin: EdgeInsets.only(right: 10, left: 20),
-                  child: InkWell(
-                    onTap: () async {
-                      getArticleById(articles, history[index]["article"].id)
-                          .view = (int.parse(
-                                getArticleById(
-                                  articles,
-                                  history[index]["article"].id,
-                                ).view!,
-                              ) +
-                              1)
-                          .toString();
-                      await updateFieldInFirebase(
-                        "article",
-                        getArticleById(articles, history[index]["article"].id)
-                            .id!,
-                        "view",
-                        int.parse(
-                          getArticleById(
-                            articles,
-                            history[index]["article"].id,
-                          ).view!,
-                        ),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArticleScreen(
-                            article: getArticleById(
-                              articles,
-                              history[index]["article"].id,
-                            ),
-                            history: history,
-                            favorite: favorite,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ImageContainer(
-                          height: 150,
-                          width: MediaQuery.of(context).size.width,
-                          imageUrl: getArticleById(
-                            articles,
-                            history[index]["article"].id,
-                          ).urlToImage!,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          getArticleById(articles, history[index]["article"].id)
-                              .title!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${getArticleById(articles, history[index]["article"].id).publishedAt}",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Flexible(
-                              child: Text(
-                                " by ${getArticleById(articles, history[index]["article"].id).author}",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

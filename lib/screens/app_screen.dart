@@ -7,7 +7,7 @@ import "package:news_reader/screens/home_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
 import "package:news_reader/screens/setting_screen_user.dart";
 import "package:news_reader/screens/waiting_screen.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
@@ -37,7 +37,6 @@ class _AppScreenState extends State<AppScreen> {
   @override
   void initState() {
     super.initState();
-
     _fetchNews().then((_) {
       setState(() {
         pages = [

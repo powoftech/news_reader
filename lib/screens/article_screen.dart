@@ -6,13 +6,13 @@ import "package:news_reader/models/article_model.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
 class ArticleScreen extends StatelessWidget {
-  const ArticleScreen({
+  ArticleScreen({
     super.key,
     required this.article,
     required this.favorite,
     required this.history,
   });
-  final Article article;
+  final dynamic article;
   final dynamic favorite;
   final dynamic history;
   static const routeName = "/article";
@@ -32,18 +32,29 @@ class ArticleScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: WebView(
-        initialUrl: article.url,
-        onWebViewCreated: (WebViewController webViewController) {
-          controller.complete(webViewController);
-        },
-      ),
+      body: article is Article
+          ? WebView(
+              initialUrl: article.url,
+              onWebViewCreated: (WebViewController webViewController) {
+                controller.complete(webViewController);
+              },
+            )
+          : WebView(
+              initialUrl: article["url"],
+              onWebViewCreated: (WebViewController webViewController) {
+                controller.complete(webViewController);
+              },
+            ),
     );
   }
 }
 
 void showConfirmationBottomSheet(
-    BuildContext context, dynamic history, dynamic favorite, Article article,) {
+  BuildContext context,
+  dynamic history,
+  dynamic favorite,
+  Article article,
+) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -107,7 +118,8 @@ void showConfirmationBottomSheet(
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                "This article is already in your favorites list!",),
+                              "This article is already in your favorites list!",
+                            ),
                             duration: Duration(seconds: 2),
                           ),
                         );

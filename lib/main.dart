@@ -1,7 +1,7 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/widgets/widget_tree.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 import "controllers/firebase_options.dart";
 
@@ -10,10 +10,15 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
-    ChangeNotifierProvider(
-      // Wrap MyApp with ChangeNotifierProvider
-      create: (context) =>
-          ThemeProvider(), // Provide an instance of ThemeProvider
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DeleteModeProvider(),
+        ),
+      ],
       child: MyApp(),
     ),
   );

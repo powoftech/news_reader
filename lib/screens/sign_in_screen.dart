@@ -1,4 +1,3 @@
-
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:email_validator/email_validator.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -7,7 +6,7 @@ import "package:flutter_svg/svg.dart";
 import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/screens/forgot_password_screen.dart";
 import "package:news_reader/screens/sign_up_screen.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class SignInScreen extends StatefulWidget {
@@ -58,10 +57,12 @@ class _SignInScreenState extends State<SignInScreen> {
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e.message!),
-        backgroundColor: Colors.red,
-      ),);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message!),
+          backgroundColor: Colors.red,
+        ),
+      );
     } on Exception catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -85,12 +86,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
     const String assetName = "assets/icon/play_store_512.svg";
 
-    final Widget svgIcon = SvgPicture.asset(assetName,
-        colorFilter: ColorFilter.mode(
-          isDarkMode ? Colors.white : Colors.black,
-          BlendMode.srcIn,
-        ),
-        semanticsLabel: "A red up arrow",);
+    final Widget svgIcon = SvgPicture.asset(
+      assetName,
+      colorFilter: ColorFilter.mode(
+        isDarkMode ? Colors.white : Colors.black,
+        BlendMode.srcIn,
+      ),
+      semanticsLabel: "A red up arrow",
+    );
 
     return Scaffold(
       backgroundColor: Provider.of<ThemeProvider>(context)
@@ -248,7 +251,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgotPasswordScreen(),),
+                        builder: (context) => ForgotPasswordScreen(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(

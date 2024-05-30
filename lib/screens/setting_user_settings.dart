@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:news_reader/screens/change_password_screen.dart";
-import "package:news_reader/widgets/theme_provider.dart";
+import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
 class SettingScreenUserSettings extends StatelessWidget {
@@ -15,11 +15,13 @@ class SettingScreenUserSettings extends StatelessWidget {
           .colorScheme
           .surface,
       appBar: AppBar(
-        title: Text("Settings",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .displayLarge,),
+        title: Text(
+          "Settings",
+          style: Provider.of<ThemeProvider>(context)
+              .getThemeData(context)
+              .textTheme
+              .displayLarge,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -28,9 +30,11 @@ class SettingScreenUserSettings extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangePasswordScreen(),),),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChangePasswordScreen(),
+                ),
+              ),
               child: Row(
                 children: [
                   Icon(Icons.password_outlined),
@@ -46,13 +50,14 @@ class SettingScreenUserSettings extends StatelessWidget {
               ),
             ),
             Divider(
-                color: Provider.of<ThemeProvider>(context)
-                            .getThemeData(context)
-                            .colorScheme
-                            .brightness ==
-                        Brightness.light
-                    ? Colors.black
-                    : Colors.white,),
+              color: Provider.of<ThemeProvider>(context)
+                          .getThemeData(context)
+                          .colorScheme
+                          .brightness ==
+                      Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
           ],
         ),
       ),
