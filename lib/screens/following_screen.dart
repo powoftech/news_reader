@@ -58,8 +58,10 @@ class _FollowingScreenState extends State<FollowingScreen> {
           final articlesFavorite = favoriteData["articles"];
           final articlesHistory = historyData["articles"];
           return _NotEmptyHistoryAndFavorite(
-            favorite: articlesFavorite,
-            history: articlesHistory,
+            favoriteArticle: articlesFavorite,
+            historyArticle: articlesHistory,
+            favoriteRef: widget.favorite,
+            historyRef: widget.history,
             articles: articles,
             updateUI: updateUI,
           );
@@ -73,13 +75,17 @@ class _FollowingScreenState extends State<FollowingScreen> {
 class _NotEmptyHistoryAndFavorite extends StatefulWidget {
   _NotEmptyHistoryAndFavorite({
     required this.articles,
-    required this.favorite,
-    required this.history,
+    required this.favoriteArticle,
+    required this.historyArticle,
     required this.updateUI,
+    required this.favoriteRef,
+    required this.historyRef,
   });
-  final articles;
-  final favorite;
-  final history;
+  var articles;
+  var favoriteArticle;
+  var historyArticle;
+  var favoriteRef;
+  var historyRef;
   final VoidCallback updateUI;
 
   @override
@@ -107,15 +113,15 @@ class _NotEmptyHistoryAndFavoriteState
             if (Provider.of<DeleteModeProvider>(context)
                 .isDeleteModeActive) // Show delete icon based on global state
               Container(
-                margin: EdgeInsets.only(top: 70),
+                margin: EdgeInsets.only(top: 50),
                 child: InkWell(
                   onTap: () async {
                     for (var index in selectedFavoriteArticles) {
                       handleDeleteArticle(
                         context,
                         "favorite",
-                        widget.history,
-                        widget.favorite,
+                        widget.historyArticle,
+                        widget.favoriteArticle,
                         index,
                       );
                     }
@@ -123,8 +129,8 @@ class _NotEmptyHistoryAndFavoriteState
                       handleDeleteArticle(
                         context,
                         "history",
-                        widget.history,
-                        widget.favorite,
+                        widget.historyArticle,
+                        widget.favoriteArticle,
                         index,
                       );
                     }
@@ -178,10 +184,10 @@ class _NotEmptyHistoryAndFavoriteState
               height: 300,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.favorite.length,
+                itemCount: widget.favoriteArticle.length,
                 separatorBuilder: (context, index) => SizedBox(height: 30),
                 itemBuilder: (context, index) {
-                  if (widget.favorite[index]["article"] == "") {
+                  if (widget.favoriteArticle[index]["article"] == "") {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Center(
@@ -208,11 +214,11 @@ class _NotEmptyHistoryAndFavoriteState
                       onTap: () async {
                         await updateFieldInFirebase(
                           "article",
-                          widget.favorite[index]["article"].id,
+                          widget.favoriteArticle[index]["article"].id,
                           "view",
                           getArticleById(
                                 widget.articles,
-                                widget.favorite[index]["article"].id,
+                                widget.favoriteArticle[index]["article"].id,
                               )["view"] +
                               1,
                         );
@@ -222,10 +228,10 @@ class _NotEmptyHistoryAndFavoriteState
                             builder: (context) => ArticleScreen(
                               article: getArticleById(
                                 widget.articles,
-                                widget.favorite[index]["article"].id,
+                                widget.favoriteArticle[index]["article"].id,
                               ),
-                              history: widget.history,
-                              favorite: widget.favorite,
+                              history: widget.historyRef,
+                              favorite: widget.favoriteRef,
                             ),
                           ),
                         );
@@ -257,14 +263,14 @@ class _NotEmptyHistoryAndFavoriteState
                             width: MediaQuery.of(context).size.width,
                             imageUrl: getArticleById(
                               widget.articles,
-                              widget.favorite[index]["article"].id,
+                              widget.favoriteArticle[index]["article"].id,
                             )["image"],
                           ),
                           const SizedBox(height: 10),
                           Text(
                             getArticleById(
                               widget.articles,
-                              widget.favorite[index]["article"].id,
+                              widget.favoriteArticle[index]["article"].id,
                             )["title"],
                             style: Theme.of(context)
                                 .textTheme
@@ -279,7 +285,7 @@ class _NotEmptyHistoryAndFavoriteState
                                 DateFormatter().formattedDate(
                                   getArticleById(
                                     widget.articles,
-                                    widget.history[index]["article"].id,
+                                    widget.historyArticle[index]["article"].id,
                                   )["datePublished"]
                                       .toDate(),
                                 ),
@@ -289,7 +295,7 @@ class _NotEmptyHistoryAndFavoriteState
                                 child: Text(
                                   " by ${List<String>.from(getArticleById(
                                     widget.articles,
-                                    widget.favorite[index]["article"].id,
+                                    widget.favoriteArticle[index]["article"].id,
                                   )["author"]).map((e) => e.toString()).toList().join(", ")}",
                                   style: Theme.of(context).textTheme.bodySmall,
                                   overflow: TextOverflow.ellipsis,
@@ -327,10 +333,10 @@ class _NotEmptyHistoryAndFavoriteState
               height: 300,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.history.length,
+                itemCount: widget.historyArticle.length,
                 separatorBuilder: (context, index) => SizedBox(height: 20),
                 itemBuilder: (context, index) {
-                  if (widget.history[index]["article"] == "") {
+                  if (widget.historyArticle[index]["article"] == "") {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Center(
@@ -344,110 +350,120 @@ class _NotEmptyHistoryAndFavoriteState
                       ),
                     );
                   }
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    margin: EdgeInsets.only(right: 10, left: 20),
-                    child: GestureDetector(
-                      onLongPressStart: (_) => Provider.of<DeleteModeProvider>(
-                        context,
-                        listen: false,
-                      ).activateDeleteMode(), // Activate global delete mode
-
-                      onTap: () async {
-                        await updateFieldInFirebase(
-                          "article",
-                          getArticleById(widget.articles,
-                                  widget.history[index]["article"].id)
-                              .id!,
-                          "view",
-                          getArticleById(
-                                widget.articles,
-                                widget.history[index]["article"].id,
-                              )["view"] +
-                              1,
-                        );
-                        Navigator.push(
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      margin: EdgeInsets.only(right: 10, left: 20),
+                      child: GestureDetector(
+                        onLongPressStart: (_) =>
+                            Provider.of<DeleteModeProvider>(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ArticleScreen(
-                              article: getArticleById(
-                                widget.articles,
-                                widget.history[index]["article"].id,
-                              ),
-                              history: widget.history,
-                              favorite: widget.favorite,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (Provider.of<DeleteModeProvider>(context)
-                              .isDeleteModeActive)
-                            // Show checkbox only in delete mode
-                            Container(
-                              alignment: Alignment.topRight,
-                              padding: EdgeInsets.only(right: 10),
-                              child: Checkbox(
-                                value: selectedHistoryArticles.contains(index),
-                                onChanged: (value) => setState(() {
-                                  if (value!) {
-                                    selectedHistoryArticles.add(
-                                      index,
-                                    );
-                                  } else {
-                                    selectedHistoryArticles.remove(
-                                      index,
-                                    );
-                                  }
-                                }),
-                              ),
-                            ),
-                          ImageContainer(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            imageUrl: getArticleById(
-                              widget.articles,
-                              widget.history[index]["article"].id,
-                            )["image"],
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
+                          listen: false,
+                        ).activateDeleteMode(), // Activate global delete mode
+
+                        onTap: () async {
+                          await updateFieldInFirebase(
+                            "article",
                             getArticleById(widget.articles,
-                                widget.history[index]["article"].id)["title"],
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                DateFormatter().formattedDate(
-                                  getArticleById(
-                                    widget.articles,
-                                    widget.history[index]["article"].id,
-                                  )["datePublished"]
-                                      .toDate(),
+                                    widget.historyArticle[index]["article"].id)
+                                .id!,
+                            "view",
+                            getArticleById(
+                                  widget.articles,
+                                  widget.historyArticle[index]["article"].id,
+                                )["view"] +
+                                1,
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ArticleScreen(
+                                article: getArticleById(
+                                  widget.articles,
+                                  widget.historyArticle[index]["article"].id,
                                 ),
-                                style: Theme.of(context).textTheme.bodySmall,
+                                history: widget.historyRef,
+                                favorite: widget.favoriteRef,
                               ),
-                              Flexible(
-                                child: Text(
-                                  " by ${List<String>.from(getArticleById(
-                                    widget.articles,
-                                    widget.history[index]["article"].id,
-                                  )["author"]).map((e) => e.toString()).toList().join(", ")}",
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (Provider.of<DeleteModeProvider>(context)
+                                .isDeleteModeActive)
+                              // Show checkbox only in delete mode
+                              Container(
+                                alignment: Alignment.topRight,
+                                padding: EdgeInsets.only(right: 10),
+                                child: Checkbox(
+                                  value:
+                                      selectedHistoryArticles.contains(index),
+                                  onChanged: (value) => setState(() {
+                                    if (value!) {
+                                      selectedHistoryArticles.add(
+                                        index,
+                                      );
+                                    } else {
+                                      selectedHistoryArticles.remove(
+                                        index,
+                                      );
+                                    }
+                                  }),
+                                ),
+                              ),
+                            ImageContainer(
+                              height: 150,
+                              width: MediaQuery.of(context).size.width,
+                              imageUrl: getArticleById(
+                                widget.articles,
+                                widget.historyArticle[index]["article"].id,
+                              )["image"],
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              getArticleById(
+                                  widget.articles,
+                                  widget.historyArticle[index]["article"]
+                                      .id)["title"],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormatter().formattedDate(
+                                    getArticleById(
+                                      widget.articles,
+                                      widget
+                                          .historyArticle[index]["article"].id,
+                                    )["datePublished"]
+                                        .toDate(),
+                                  ),
                                   style: Theme.of(context).textTheme.bodySmall,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Flexible(
+                                  child: Text(
+                                    " by ${List<String>.from(getArticleById(
+                                      widget.articles,
+                                      widget
+                                          .historyArticle[index]["article"].id,
+                                    )["author"]).map((e) => e.toString()).toList().join(", ")}",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

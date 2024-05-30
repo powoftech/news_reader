@@ -48,7 +48,7 @@ Future<void> deleteArticlesFromFirebase(
     favoriteRef.update({
       "articles": FieldValue.arrayRemove([favorite[index]]),
     });
-    if (index == 0) {
+    if (index == 0 && favorite.length == 1) {
       favoriteRef.update({
         "articles": ([
           {
@@ -64,7 +64,7 @@ Future<void> deleteArticlesFromFirebase(
     historyRef.update({
       "articles": FieldValue.arrayRemove([history[index]]),
     });
-    if (index == 0) {
+    if (index == 0 && history.length == 1) {
       historyRef.update({
         "articles": ([
           {
