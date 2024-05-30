@@ -9,7 +9,7 @@ class Article {
   String? publishedAt;
   String? view;
   List<String>? topic;
-
+  bool isDeleteModeActive = false;
   Article({
     required this.id,
     required this.author,
