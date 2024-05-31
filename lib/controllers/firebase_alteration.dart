@@ -45,9 +45,7 @@ Future<void> deleteArticlesFromFirebase(
   if (field == "favorite") {
     final favoriteRef =
         FirebaseFirestore.instance.collection("readLater").doc(uid);
-    favoriteRef.update({
-      "articles": FieldValue.arrayRemove([favorite[index]]),
-    });
+
     if (index == 0 && favorite.length == 1) {
       favoriteRef.update({
         "articles": ([
@@ -57,13 +55,15 @@ Future<void> deleteArticlesFromFirebase(
           }
         ]),
       });
+    } else {
+      favoriteRef.update({
+        "articles": FieldValue.arrayRemove([favorite[index]]),
+      });
     }
   } else {
     final historyRef =
         FirebaseFirestore.instance.collection("history").doc(uid);
-    historyRef.update({
-      "articles": FieldValue.arrayRemove([history[index]]),
-    });
+
     if (index == 0 && history.length == 1) {
       historyRef.update({
         "articles": ([
@@ -72,6 +72,10 @@ Future<void> deleteArticlesFromFirebase(
             "dateRead": Timestamp.now(),
           }
         ]),
+      });
+    } else {
+      historyRef.update({
+        "articles": FieldValue.arrayRemove([history[index]]),
       });
     }
   }
