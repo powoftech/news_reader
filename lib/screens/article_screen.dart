@@ -130,12 +130,14 @@ class _articleView extends StatelessWidget {
       body: article is Article
           ? WebView(
               initialUrl: article.url,
+              javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
                 controller.complete(webViewController);
               },
             )
           : WebView(
               initialUrl: article["url"],
+              javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
                 controller.complete(webViewController);
               },
