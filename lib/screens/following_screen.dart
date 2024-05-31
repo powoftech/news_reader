@@ -112,52 +112,91 @@ class _NotEmptyHistoryAndFavoriteState
           children: [
             if (Provider.of<DeleteModeProvider>(context)
                 .isDeleteModeActive) // Show delete icon based on global state
-              Container(
-                margin: EdgeInsets.only(top: 50),
-                child: InkWell(
-                  onTap: () async {
-                    for (var index in selectedFavoriteArticles) {
-                      handleDeleteArticle(
-                        context,
-                        "favorite",
-                        widget.historyArticle,
-                        widget.favoriteArticle,
-                        index,
-                      );
-                    }
-                    for (var index in selectedHistoryArticles) {
-                      handleDeleteArticle(
-                        context,
-                        "history",
-                        widget.historyArticle,
-                        widget.favoriteArticle,
-                        index,
-                      );
-                    }
-                    Provider.of<DeleteModeProvider>(
-                      context,
-                      listen: false,
-                    ).deactivateDeleteMode();
-                    selectedFavoriteArticles.clear();
-                    selectedHistoryArticles.clear();
-                    widget.updateUI();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                          "Delete (${selectedFavoriteArticles.length + selectedHistoryArticles.length})",
-                          style: Provider.of<ThemeProvider>(context)
-                              .getThemeData(context)
-                              .textTheme
-                              .displaySmall!
-                              .copyWith(
-                                color: Colors.red,
-                              )),
-                      Icon(Icons.delete, color: Colors.red),
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 60, bottom: 10),
+                    child: InkWell(
+                      onTap: () async {
+                        for (var index in selectedFavoriteArticles) {
+                          handleDeleteArticle(
+                            context,
+                            "favorite",
+                            widget.historyArticle,
+                            widget.favoriteArticle,
+                            index,
+                          );
+                        }
+                        for (var index in selectedHistoryArticles) {
+                          handleDeleteArticle(
+                            context,
+                            "history",
+                            widget.historyArticle,
+                            widget.favoriteArticle,
+                            index,
+                          );
+                        }
+                        Provider.of<DeleteModeProvider>(
+                          context,
+                          listen: false,
+                        ).deactivateDeleteMode();
+                        selectedFavoriteArticles.clear();
+                        selectedHistoryArticles.clear();
+                        widget.updateUI();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                              "Delete (${selectedFavoriteArticles.length + selectedHistoryArticles.length})",
+                              style: Provider.of<ThemeProvider>(context)
+                                  .getThemeData(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                    color: Colors.red,
+                                  )),
+                          Icon(Icons.delete, color: Colors.red),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 20),
+                  Container(
+                    margin: EdgeInsets.only(top: 60, bottom: 10),
+                    child: InkWell(
+                      onTap: () {
+                        Provider.of<DeleteModeProvider>(
+                          context,
+                          listen: false,
+                        ).deactivateDeleteMode();
+                        selectedFavoriteArticles.clear();
+                        selectedHistoryArticles.clear();
+                        widget.updateUI();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Cancel",
+                            style: Provider.of<ThemeProvider>(context)
+                                .getThemeData(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(
+                                  color: Colors.blue,
+                                ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(Icons.cancel, color: Colors.blue),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             if (!Provider.of<DeleteModeProvider>(context).isDeleteModeActive)
               SizedBox(height: 90),
