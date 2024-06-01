@@ -1,10 +1,9 @@
-import "dart:developer";
-
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:email_validator/email_validator.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/controllers/auth.dart";
+import "package:flutter_svg/svg.dart";
+import "package:news_reader/resources/auth_methods.dart";
+import "package:news_reader/screens/app_screen.dart";
+import "package:news_reader/utils/utils.dart";
 import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
 
@@ -24,88 +23,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  Future<bool> createUserWithEmailAndPassword() async {
-    try {
-      final userCollectionRef = FirebaseFirestore.instance.collection("user");
-      final querySnapshot = await userCollectionRef
-          .where(
-            "username",
-            isEqualTo: _controllerUsername.text,
-          )
-          .get();
+  void signUpUser() async {
+    final navigator = Navigator.of(context);
 
-      if (querySnapshot.docs.isNotEmpty) {
-        throw Exception("The username is already in use by another account.");
-      }
+    String result = await AuthMethods().signUp(
+      email: _controllerEmail.text,
+      username: _controllerUsername.text,
+      password: _controllerPassword.text,
+    );
 
-      String? uid = await Auth().createUserWithEmailAndPassword(
-        email: _controllerEmail.text,
-        password: _controllerPassword.text,
+    if (result == "Success") {
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const AppScreen()),
+        (route) => false,
       );
-
-      final userDocumentRef = userCollectionRef.doc(uid);
-      await userDocumentRef.set({
-        "username": _controllerUsername.text,
-        "status":
-            FirebaseFirestore.instance.collection("userStatus").doc("active"),
-        "type": FirebaseFirestore.instance.collection("userType").doc("reader"),
-        "dateCreated": Timestamp.now(),
-        "lastActive": Timestamp.now(),
-        "email": _controllerEmail.text,
-      });
-
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message!),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } on Exception catch (e) {
-      if (!mounted) return false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().split(":")[1]),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } else {
+      if (!mounted) return;
+      showSnackBar(context, result);
     }
-    return false;
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Provider.of<ThemeProvider>(context)
-          .getThemeData(context)
-          .colorScheme
-          .surface,
-      appBar: AppBar(
-        title: Text(
-          "Create new account",
-          style: Provider.of<ThemeProvider>(context)
-              .getThemeData(context)
-              .textTheme
-              .displayLarge,
-        ),
+    bool isKeyboardShowing = MediaQuery.of(context).viewInsets.vertical > 0;
+
+    final Widget svgIcon = SvgPicture.asset(
+      "assets/icon/play_store_512.svg",
+      colorFilter: ColorFilter.mode(
+        context.isDarkMode ? Colors.white : Colors.black,
+        BlendMode.srcIn,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      height: 128,
+      semanticsLabel: "",
+    );
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Provider.of<ThemeProvider>(context)
+            .getThemeData(context)
+            .colorScheme
+            .surface,
+        extendBodyBehindAppBar: true,
+        body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.disabled,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                if (!isKeyboardShowing) svgIcon,
+                if (!isKeyboardShowing) SizedBox(height: 40),
                 TextFormField(
                   controller: _controllerEmail,
                   validator: (value) => EmailValidator.validate(value!)
@@ -136,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     String pattern = r"^[a-zA-Z0-9_]+$";
                     RegExp regex = RegExp(pattern);
                     if (!regex.hasMatch(value!)) {
-                      return "The username must contain only\n\tletters,\n\tdigits,\n\tunderscores";
+                      return "The username must contain only letters, digits, underscores.";
                     } else {
                       return null;
                     }
@@ -161,16 +129,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _controllerPassword,
                   validator: (value) {
-                    String error = "The password must contain at least";
+                    String error = """The password must contain at least""";
 
-                    if (!RegExp(r"[a-zA-z]").hasMatch(value!)) {
-                      error += "\n\t1 letter,";
-                    }
-                    if (!RegExp(r"[0-9]").hasMatch(value)) {
-                      error += "\n\t1 number,";
-                    }
-                    if (value.length < 10) {
-                      error += "\n\t10 characters";
+                    // if (!RegExp(r"[a-zA-z]").hasMatch(value!)) {
+                    //   error += " 1 letter,";
+                    // }
+                    // if (!RegExp(r"[0-9]").hasMatch(value)) {
+                    //   error += " 1 number,";
+                    // }
+                    if (value!.length < 10) {
+                      error += " 10 characters.";
                     }
 
                     if (error == "The password must contain at least") {
@@ -234,10 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      if (await createUserWithEmailAndPassword()) {
-                        log("Successfully!");
-                        Navigator.of(context).pop();
-                      }
+                      signUpUser();
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -275,7 +240,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade200,

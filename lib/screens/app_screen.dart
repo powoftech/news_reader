@@ -1,14 +1,12 @@
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/controllers/news.dart";
-import "package:news_reader/models/article_model.dart";
-import "package:news_reader/screens/following_screen.dart";
-import "package:news_reader/screens/home_screen.dart";
+import "package:news_reader/screens/history_screen.dart";
+import "package:news_reader/screens/news_screen.dart";
+import "package:news_reader/screens/read_later_screen.dart";
 import "package:news_reader/screens/search_screen.dart";
-import "package:news_reader/screens/setting_screen_user.dart";
-import "package:news_reader/screens/waiting_screen.dart";
+import "package:news_reader/screens/setting_screen.dart";
 import "package:news_reader/widgets/provider.dart";
 
+/// The main screen of the app that displays different screens based on the selected tab.
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
 
@@ -17,54 +15,17 @@ class AppScreen extends StatefulWidget {
 }
 
 class _AppScreenState extends State<AppScreen> {
-  List<Article> articles = [];
-  late DocumentReference<Map<String, dynamic>> favorite;
-  late DocumentReference<Map<String, dynamic>> history;
-  late Query<Map<String, dynamic>> FBArticles;
-  List<Widget>? pages;
-  List<String>? uniqueTopics;
-  String user = "";
-  Future<void> _fetchNews() async {
-    News newsService = News();
-    await newsService.getNews();
-    articles = News.news;
-    uniqueTopics = newsService.allTopics.toList();
-    history = newsService.history;
-    favorite = newsService.favorite;
-    FBArticles = newsService.article;
-  }
+  final List<Widget> pages = const <Widget>[
+    NewsScreen(key: PageStorageKey("HomeScreen")),
+    SearchScreen(key: PageStorageKey<String>("SearchScreen")),
+    HistoryScreen(key: PageStorageKey("HistoryScreen")),
+    ReadLaterScreen(key: PageStorageKey("ReadLaterScreen")),
+    SettingScreen(key: PageStorageKey<String>("SettingScreen")),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _fetchNews().then((_) {
-      setState(() {
-        pages = [
-          HomeScreen(
-            articles: articles,
-            favorite: favorite,
-            history: history,
-            key: PageStorageKey<String>("HomeScreen"),
-          ),
-          SearchScreen(
-            articles: articles,
-            favorite: favorite,
-            history: history,
-            uniqueTopics: uniqueTopics,
-            key: PageStorageKey<String>("SearchScreen"),
-          ),
-          FollowingScreen(
-            articles: FBArticles,
-            favorite: favorite,
-            history: history,
-            key: PageStorageKey<String>("FollowingScreen"),
-          ),
-          SettingScreenUser(
-            key: PageStorageKey<String>("SettingScreen"),
-          ),
-        ];
-      });
-    });
   }
 
   int currentTab = 0;
@@ -75,14 +36,11 @@ class _AppScreenState extends State<AppScreen> {
     ThemeData themeData = ThemeProvider().getThemeData(context);
     bool isDarkMode = themeData.brightness == Brightness.dark;
 
-    if (pages == null) {
-      return WaitingScreen(isDarkMode: isDarkMode);
-    }
-
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: PageStorage(
         bucket: _bucket,
-        child: pages![currentTab],
+        child: pages[currentTab],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentTab,
@@ -103,15 +61,19 @@ class _AppScreenState extends State<AppScreen> {
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.explore),
             label: "Search",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: "Following",
+            icon: Icon(Icons.history),
+            label: "History",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.favorite),
+            label: "ReadLater",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
             label: "Setting",
           ),
         ],

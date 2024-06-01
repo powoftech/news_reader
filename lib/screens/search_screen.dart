@@ -1,278 +1,123 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/controllers/firebase_alteration.dart";
-import "package:news_reader/models/article_model.dart";
-import "package:news_reader/screens/article_screen.dart";
+import "package:news_reader/screens/news_screen.dart";
 import "package:news_reader/screens/search_result.dart";
+import "package:news_reader/utils/utils.dart";
 import "package:news_reader/widgets/image_container.dart";
 import "package:news_reader/widgets/provider.dart";
 import "package:provider/provider.dart";
+import "package:timeago/timeago.dart" as timeago;
 
-class SearchScreen extends StatelessWidget {
-  static const routeName = "/discover";
-  final List<Article> articles;
-  final dynamic history;
-  final dynamic favorite;
-  final List<String>? uniqueTopics;
+class SearchScreen extends StatefulWidget {
+  static const routeName = "/search";
   const SearchScreen({
     super.key,
-    required this.articles,
-    required this.history,
-    required this.favorite,
-    required this.uniqueTopics,
   });
+
   @override
-  Widget build(BuildContext context) {
-    List<String> tabs = uniqueTopics!;
-    return DefaultTabController(
-      initialIndex: 0,
-      length: tabs.length,
-      child: Scaffold(
-        backgroundColor: Provider.of<ThemeProvider>(context)
-            .getThemeData(context)
-            .colorScheme
-            .surface,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
-          child: ListView(
-            children: [
-              _DiscoverNews(
-                articles: articles,
-                history: history,
-                favorite: favorite,
-              ),
-              _CategoryNews(
-                tabs: tabs,
-                articles: articles,
-                favorite: favorite,
-                history: history,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class CustomTabBar extends StatelessWidget {
-  final List<Widget> tabs;
+class _SearchScreenState extends State<SearchScreen>
+    with AutomaticKeepAliveClientMixin {
+  final CollectionReference _articleCollection =
+      FirebaseFirestore.instance.collection("article");
 
-  CustomTabBar({required this.tabs});
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: tabs.map((tab) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: tab,
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+    super.build(context);
 
-class _CategoryNews extends StatelessWidget {
-  const _CategoryNews({
-    required this.tabs,
-    required this.articles,
-    required this.favorite,
-    required this.history,
-  });
-  final List<String> tabs;
-  final List<Article> articles;
-  final dynamic favorite;
-  final dynamic history;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TabBar(
-          tabAlignment: TabAlignment.start,
-          isScrollable: true,
-          indicatorColor: Colors.black,
-          tabs: tabs
-              .map(
-                (tab) => Tab(
-                  icon: Text(
-                    tab,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+    return StreamBuilder<QuerySnapshot>(
+      stream: _articleCollection
+          .orderBy("datePublished", descending: true)
+          .limit(50)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return const Center(child: Text("Something went wrong"));
+        }
+
+        final articles = snapshot.data!.docs
+            .map((snap) => snap.data() as Map<String, dynamic>);
+        final topics = articles.expand((article) {
+          return (article["topic"] as List<dynamic>)
+              .map((value) => value.toString().capitalize())
+              .toSet();
+        });
+
+        return SafeArea(
+          child: DefaultTabController(
+            initialIndex: 0,
+            length: topics.toSet().length,
+            child: Scaffold(
+              backgroundColor: Provider.of<ThemeProvider>(context)
+                  .getThemeData(context)
+                  .colorScheme
+                  .surface,
+              extendBodyBehindAppBar: true,
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    children: [
+                      _DiscoverNews(),
+                      Expanded(
+                        child: _CategoryNews(
+                          tabs: topics.toSet(),
+                          snapshot: snapshot.data!.docs,
+                          articles: articles.toList(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
-              .toList(),
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.55,
-          child: TabBarView(
-            children: tabs.map((tab) {
-              final filteredArticles = articles
-                  .where(
-                    (article) => article.topic!.contains(tab.toLowerCase()),
-                  )
-                  .toList();
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: filteredArticles.length,
-                itemBuilder: (context, index) {
-                  final currentArticle = filteredArticles[index];
-                  return InkWell(
-                    onTap: () async {
-                      currentArticle.view =
-                          (int.parse(currentArticle.view!) + 1).toString();
-                      await updateFieldInFirebase(
-                        "article",
-                        currentArticle.id!,
-                        "view",
-                        int.parse(currentArticle.view!),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArticleScreen(
-                            article: currentArticle,
-                            favorite: favorite,
-                            history: history,
-                          ),
-                        ),
-                      );
-                      final historyData = await history.get();
-                      final articleExistence =
-                          historyData.data()!["articles"][0]["article"];
-                      if (articleExistence == "") {
-                        history.update({
-                          "articles": ([
-                            {
-                              "article": FirebaseFirestore.instance
-                                  .collection("article")
-                                  .doc(articles[index].id!),
-                              "dateRead": Timestamp.now(),
-                            }
-                          ]),
-                        });
-                      } else {
-                        List<dynamic> existingArticleIds = historyData
-                            .data()!["articles"]
-                            .map((article) => article["article"].id)
-                            .toList();
-
-                        // Check if the article exists
-                        if (!existingArticleIds.contains(articles[index].id)) {
-                          // If the article doesn't exist, update the articles field
-                          history.update({
-                            "articles": FieldValue.arrayUnion([
-                              {
-                                "article": FirebaseFirestore.instance
-                                    .collection("article")
-                                    .doc(articles[index].id!),
-                                "dateRead": Timestamp.now(),
-                              }
-                            ]),
-                          });
-                        }
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: ImageContainer(
-                            width: 80,
-                            height: 80,
-                            borderRadius: 5,
-                            imageUrl: currentArticle.urlToImage!,
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                currentArticle.title!,
-                                maxLines: 2,
-                                overflow: TextOverflow.clip,
-                                style: Provider.of<ThemeProvider>(context)
-                                    .getThemeData(context)
-                                    .textTheme
-                                    .bodyLarge!,
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  const Icon(Icons.schedule, size: 18),
-                                  const SizedBox(width: 5),
-                                  Expanded(
-                                    child: Text(
-                                      "${currentArticle.publishedAt}",
-                                      style: Provider.of<ThemeProvider>(context)
-                                          .getThemeData(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  const Icon(Icons.visibility, size: 18),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    "${currentArticle.view} views",
-                                    style: Provider.of<ThemeProvider>(context)
-                                        .getThemeData(context)
-                                        .textTheme
-                                        .bodyMedium,
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }).toList(),
+              ),
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
-class _DiscoverNews extends StatelessWidget {
-  const _DiscoverNews({
-    required this.articles,
-    required this.favorite,
-    required this.history,
-  });
-  final List<Article> articles;
-  final dynamic favorite;
-  final dynamic history;
+class _DiscoverNews extends StatefulWidget {
+  const _DiscoverNews();
+
+  @override
+  State<_DiscoverNews> createState() => _DiscoverNewsState();
+}
+
+class _DiscoverNewsState extends State<_DiscoverNews>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SizedBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Discover",
-            style: Provider.of<ThemeProvider>(context)
-                .getThemeData(context)
-                .textTheme
-                .headlineLarge,
+          Row(
+            children: [
+              Icon(Icons.explore),
+              SizedBox(width: 10),
+              Text(
+                "Discover",
+                style: Provider.of<ThemeProvider>(context)
+                    .getThemeData(context)
+                    .textTheme
+                    .headlineLarge,
+              ),
+            ],
           ),
           const SizedBox(
             height: 5,
@@ -291,12 +136,7 @@ class _DiscoverNews extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SearchArticleScreen(
-                      articles: articles,
-                      history: history,
-                      favorite: favorite,
-                      keyword: value,
-                    ),
+                    builder: (context) => SearchArticleScreen(keyword: value),
                   ),
                 );
               },
@@ -323,6 +163,140 @@ class _DiscoverNews extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CategoryNews extends StatefulWidget {
+  const _CategoryNews({
+    required this.tabs,
+    required this.snapshot,
+    required this.articles,
+  });
+
+  final Set<dynamic> tabs;
+  final List<QueryDocumentSnapshot> snapshot;
+  final List<dynamic> articles;
+
+  @override
+  State<_CategoryNews> createState() => _CategoryNewsState();
+}
+
+class _CategoryNewsState extends State<_CategoryNews>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Column(
+      children: [
+        TabBar(
+          tabAlignment: TabAlignment.start,
+          isScrollable: true,
+          indicatorColor: Colors.black,
+          tabs: widget.tabs
+              .map(
+                (tab) => Tab(
+                  icon: Text(
+                    tab,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+        Expanded(
+          child: TabBarView(
+            children: widget.tabs.map((tab) {
+              final filteredArticles = widget.articles
+                  .where(
+                    (article) => (article["topic"] as List<dynamic>)
+                        .contains(tab.toLowerCase()),
+                  )
+                  .toList();
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredArticles.length,
+                itemBuilder: (context, index) {
+                  final article = filteredArticles[index];
+                  return InkWell(
+                    onTap: () {
+                      viewArticle(context, widget.snapshot[index]);
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ImageContainer(
+                            width: 80,
+                            height: 80,
+                            borderRadius: 5,
+                            imageUrl: article["image"],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                article["title"],
+                                maxLines: 2,
+                                overflow: TextOverflow.clip,
+                                style: Provider.of<ThemeProvider>(context)
+                                    .getThemeData(context)
+                                    .textTheme
+                                    .bodyLarge!,
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.schedule, size: 18),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      timeago.format(
+                                        (article["datePublished"] as Timestamp)
+                                            .toDate(),
+                                      ),
+                                      style: Provider.of<ThemeProvider>(context)
+                                          .getThemeData(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  const Icon(Icons.visibility, size: 18),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${article["view"] as int} views",
+                                    style: Provider.of<ThemeProvider>(context)
+                                        .getThemeData(context)
+                                        .textTheme
+                                        .bodyMedium,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }

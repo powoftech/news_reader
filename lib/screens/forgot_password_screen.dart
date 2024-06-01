@@ -13,6 +13,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           .getThemeData(context)
           .colorScheme
           .surface,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
           "Reset your password",

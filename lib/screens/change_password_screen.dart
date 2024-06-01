@@ -28,6 +28,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
           .getThemeData(context)
           .colorScheme
           .surface,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
           "Change Password",
