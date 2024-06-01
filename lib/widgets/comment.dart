@@ -51,7 +51,7 @@ class CommentWidget extends StatelessWidget {
             ],
           );
         } else if (snapshot.connectionState == ConnectionState.none) {
-          return Text('Error in fetching data');
+          return Text("Error in fetching data");
         } else {
           return CircularProgressIndicator();
         }

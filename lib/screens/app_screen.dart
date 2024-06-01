@@ -1,6 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:news_reader/controllers/news.dart";
+import "package:news_reader/controllers/firebase_collections.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/following_screen.dart";
 import "package:news_reader/screens/home_screen.dart";

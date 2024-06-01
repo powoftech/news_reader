@@ -129,7 +129,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
-                } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                } else if (!snapshot.hasData ||
+                    !snapshot.data!.exists ||
+                    snapshot.data!.get("comments")[0]["content"] == "") {
                   return Column(
                     children: [
                       Text("No comments yet"),
@@ -145,8 +147,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         var commentRef = snapshot.data!;
                         return FutureBuilder(
                           future: getUsername(commentData["user"].id),
-                          builder: (context,
-                              AsyncSnapshot<String> usernameSnapshot) {
+                          builder: (
+                            context,
+                            AsyncSnapshot<String> usernameSnapshot,
+                          ) {
                             if (usernameSnapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return CircularProgressIndicator();

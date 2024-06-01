@@ -1,17 +1,13 @@
 import "dart:async";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_core/firebase_core.dart";
 import "package:flutter/material.dart";
 import "package:news_reader/controllers/auth.dart";
 import "package:news_reader/models/article_model.dart";
 import "package:news_reader/screens/comment_screen.dart";
-import "package:news_reader/widgets/comment.dart";
-import "package:news_reader/widgets/provider.dart";
-import "package:provider/provider.dart";
 
 import "package:webview_flutter/webview_flutter.dart";
 
-class ArticleScreen extends StatelessWidget {
+class ArticleScreen extends StatefulWidget {
   ArticleScreen({
     super.key,
     required this.article,
@@ -24,14 +20,23 @@ class ArticleScreen extends StatelessWidget {
   static const routeName = "/article";
 
   @override
+  State<ArticleScreen> createState() => _ArticleScreenState();
+}
+
+class _ArticleScreenState extends State<ArticleScreen> {
+  @override
   Widget build(BuildContext context) {
     final Completer<WebViewController> controller =
         Completer<WebViewController>();
     return FutureBuilder(
       future: Future.wait([
-        Future.value(favorite.get()), // Wrap in Future.value if necessary
-        Future.value(history.get()), // Wrap in Future.value if necessary
-        FirebaseFirestore.instance.collection("comment").doc(article.id).get(),
+        Future.value(
+            widget.favorite.get()), // Wrap in Future.value if necessary
+        Future.value(widget.history.get()), // Wrap in Future.value if necessary
+        FirebaseFirestore.instance
+            .collection("comment")
+            .doc(widget.article.id)
+            .get(),
       ]),
       builder: (
         BuildContext context,
@@ -52,12 +57,12 @@ class ArticleScreen extends StatelessWidget {
           if (!commentExists) {
             FirebaseFirestore.instance
                 .collection("comment")
-                .doc(article.id)
+                .doc(widget.article.id)
                 .set(
               {
                 "article": FirebaseFirestore.instance
                     .collection("article")
-                    .doc(article.id),
+                    .doc(widget.article.id),
                 "comments": {
                   {
                     "content": "",
@@ -68,7 +73,11 @@ class ArticleScreen extends StatelessWidget {
                   }
                 }
               },
-            ); // Replace with your initial comment data structure
+            ).then((_) {
+              // After adding the new comment, trigger a rebuild to fetch updated data
+              setState(() {});
+            });
+            return CircularProgressIndicator(); // Show a loading spinner after adding the new comment
           }
           final articlesFavorite = favoriteData["articles"];
           final articlesHistory = historyData["articles"];
@@ -76,7 +85,7 @@ class ArticleScreen extends StatelessWidget {
           return _articleView(
             favorite: articlesFavorite,
             history: articlesHistory,
-            article: article,
+            article: widget.article,
             comment: commentUser,
             controller: controller,
           );

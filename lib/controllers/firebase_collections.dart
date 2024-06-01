@@ -86,9 +86,8 @@ class News {
             .map((item) => item.toString())
             .toList(),
       );
-
-      // Add article to the list
       news.add(article);
+
       final articleTopics =
           uppercaseFirstLetters(data["topic"] as List<dynamic>);
       allTopics.addAll(articleTopics.expand((topic) => [topic]));
